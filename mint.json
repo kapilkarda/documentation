@@ -43,11 +43,6 @@
       "name": "Dashboard",
       "icon": "house",
       "url": "https://app.qcall.ai/admin/dashboard"
-    },
-    {
-      "name": "Join our Discord Community",
-      "icon": "discord",
-      "url": "https://discord.gg/mqXRsFfu"
     }
   ],
   "navigation": [
