@@ -1,0 +1,196 @@
+---
+title: Assistant Actions
+description: ""
+---
+
+## In Assistants functionality :
+
+### Call Transfer:
+
+Below the recording option, you will find the "Call Transfer" option. Here, you can enter the transfer number so that when someone wants to call you back, they can do so.
+Add a description for the transfer number.
+
+### Send SMS and WhatsApp:
+
+#### SMS:
+
+The agent can send an SMS to the user when certain conditions are met<br/>
+( A2P 10DLC registration is required for all SMS communications.).
+
+Just enter the SMS content and set the conditions. You can choose to send it after the call ends.
+
+#### WhatsApp:
+
+Select a WhatsApp template ( that you have created at SMTP through the integration option. ). Specify when the message should be sent, and choose to send it after the call ends if you prefer.
+
+### Send Email
+
+The agent can also send an email when conditions are met.<br/>
+
+- Choose the email template, enter the subject, and set the conditions.<br/>
+- You can decide to send it after the call ends.
+
+### SMTP (Send Email) option.
+
+From here, the agent can send the user an email with the desired content when specific conditions are met.<br/>
+
+- Select the email template you created through the SMTP integration.
+- Enter the email subject.
+- Specify the conditions under which the email will be sent.
+- Choose whether to send the email after the call ends, based on your preference. <br/>
+  Then, create
+
+### Info Extractor:
+
+You will see the next <span style={{ fontWeight: 800 }}>Info Extractor</span>. Here you can add the question in three ways:
+
+1. Yes/No Question: Add a question that can be answered with a simple "Yes" or "No".
+2. Single Choice: Provide multiple options for the user, but they can only select one.
+3. Open Question: Add an open-ended question allowing the user to provide a free answer.
+
+Here I want to add a Yes/No question.
+
+Now enter the identifier name, email, or anything that you want. I have a name, Allison, as the identifier. Add the question "Have you heard about QCall Ai before?". The question is now saved, and you can edit or delete it if needed. Add questions and options in the Single Choice and Open Question options, as per your preference then click Create.
+
+Here is the information in the correct format:
+
+### Here are the steps to sync data between QCall Ai and your CRM (HubSpot, Salesforce and Zapier Hook):
+
+1. After making an outbound or inbound call in QCall Ai, the call data will be automatically updated in your connected CRM platform(s).
+
+2. To manage the CRM sync Action, go to the QCall Ai dashboard click on the assistant field and update your assistant setting by clicking on the new assistant button.
+
+3. In the assistant at the bottom right corner you will find Sync Data with CRM.
+
+4. In this action, you can select which CRM platform(s) you want to sync data with - you can choose HubSpot, Salesforce, or Zapier Hook.
+
+5. Once you have selected your preferred CRM platform(s), click "Save" to apply the settings.
+
+6. Open the contact list option and create a new contact list.
+
+7. Click on the "Create" button to create a new contact list or select a particular contact list and link it with HubSpot, Salesforce or Zapier Hook.
+
+8. Go to the campaign field, Create a new campaign
+
+9. Fill out all the required details for the campaign.
+
+10. Choose the contact list that is linked with HubSpot, Salesforce or Zapier Hook Run the campaign
+
+Then, All call data from your outbound or inbound calls in QCall Ai will be automatically synced to your connected HubSpot, Salesforce or Zapier Hook CRM.
+
+### Zapier Hook.
+
+QCall Ai lets you set up actions like booking appointments and sending links through Zapier. Too many actions can confuse the AI, so keep the number of actions small for the best results.
+
+To integrate QCall Ai with Zapier Hook, follow these steps: 
+
+1. Go to the last step of the assistant creation process and click on "CRM Data."
+
+2. Update the meeting notes in the CRM.
+
+3. Select the Zapier hook. Search for "Zapier hook" on Google and continue with the free option. Complete the sign-in process.
+
+4. In Zapier's dashboard, click on "Zaps" and then create a new zap.
+
+5. First, select the event that starts your zap, then choose the trigger event and click "Continue."
+
+6. Pick the "Off" child key and continue. After that, you will find your Zapier hook URL. 
+
+7. Copy this URL and paste it in the required place in the assistant settings, then save it.
+
+8. Now, test the setup by placing a demo call. You will receive a notification for the call submission.
+
+9. Again, go to Zapier's website and click on "Test Trigger." You will find a new record with details such as the phone number, whether the call was transferred if a message was sent, information extraction, and query string.
+
+By following these steps, you can integrate QCall Ai with Zapier and set up automated actions through the Zapier platform.
+
+### Real-Time Booking
+
+In this update, you can schedule a booking during a call with Cal.com. & GHL. For cal.com, you must enter your API Key and Cal event ID. Here are the steps to create an API Key by signing in at Cal.com.
+
+Steps to Create an API Key on Cal.com:
+
+1. Search for Cal.com:
+
+   - Open your browser and search for "Cal.com".
+
+2. Sign Up or Sign In:
+
+   - Click on the "Get Started" button.
+   - You can sign up by entering your username, email ID, and password or continue with Google or SAML.
+   - I prefer continuing with Google.
+
+3. Continue with Google:
+
+   - Select your Google account and continue.
+
+4. Profile Setup:
+
+   - You will need to provide some basic information to set up your profile. You can edit this information later.
+   - Follow these steps one by one:
+     - Enter your username and full name.
+     - Select your time zone as per your need.
+
+5. Connect Your Calendar:
+
+   - Connect your calendar to automatically check for busy times and new events as they’re scheduled.
+   - I prefer Google Calendar. When connecting, it will ask for your Gmail account. Confirm it and select what Cal.com can access according to your preference.
+
+6. Connect Video Apps:
+
+   - Connect your video apps to use them for your event types. Choose according to your needs.
+
+7. Define Availability:
+   - Define ranges of time when you are available. You can customize all of this later on the availability page.
+
+By following these steps, you will be able to set up your profile on Cal.com and generate an API Key needed for real-time booking.
+
+Here are the steps:
+
+1. Complete the sign-in process.
+2. Navigate to the "Event Types" section.
+3. Click on the meeting event.
+4. Locate the call event ID in the URL, which will be a sequence of numbers.
+
+To access the API keys that allow you to make API calls for your account.
+
+1. Click on the settings button.
+2. Locate the "API Keys" option and open it.
+3. Create your first API key by entering a name for the key.
+4. Set the expiration date or choose the "Never Expires" option to save the API key.
+
+<Frame>
+  <img src="/images/calcom.gif" style={{ borderRadius: "0.5rem" }} />
+</Frame>
+
+Then you will get your API Key.
+
+- Enter the API Key.
+- Enter the Event ID.
+- Select Timezone.
+- Set Initial Booking Date.
+- Provide Description.
+- Specify Conditions.
+- Save.
+
+For GHL (GoHighLevel):
+
+- Select the calendar, then click "Next."
+- Select the timezone.
+- Set the initial booking date.
+- Provide a description.
+- Try to reach the target.
+- Save.
+
+For more details about GHL, please check the integration options.
+
+For Open Booking, in addition to scheduling bookings, you can also perform the following steps:
+
+- Select the start time.
+- Select the end time.
+- Choose the days.
+- then click "Next."
+- Set the initial booking date.
+- Provide a description.
+- Aim to reach the target.
+- Save.

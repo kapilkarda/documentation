@@ -1,0 +1,145 @@
+---
+title: WhasApp Access Token
+description: "This page describes everything about whatsApp Access Token Generate"
+---
+
+## Steps to Get a Permanent Access Token
+
+1. Access [Business Settings:](https://turivishal.medium.com/permanent-access-token-for-whatsapp-business-apis-c81e1dfc86c7)<br/>
+
+   - Go to Business Settings.
+
+2. Navigate to System Users:<br/>
+   - Under Users, click on System Users.
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/1.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+3. Create a System User:<br/>
+   - Click the Add button.
+   - Provide a name for the system user.
+   - Select a role.
+   - Click Create System User.
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/2.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+4. Accept Non-Discrimination Policy:<br/>
+
+   - Review and accept the non-discrimination policy on behalf of your system users.
+
+5. Finalize Creation:<br/>
+
+- After accepting the policy, click Done.
+
+6. App Association (if needed):<br/>
+
+   - If you receive an error stating that an app must be part of the business, you need to create a Facebook app associated with your Business Manager first. Once the app is created, return to this step.
+
+7. Add App:<br/>
+
+- Under Accounts, click on Apps.
+- Click the Add drop-down menu.
+- Select Connect an App ID.
+- Enter the Facebook app ID.
+- Click Add App.
+
+8. Assign assets such as your Pages, ad accounts, Facebook apps, and catalogues.<br/>
+
+- Click on the Add Assets button, it will open a model and you can able to see, 1. Select asset type, 2. Select assets, and 3. App.
+  <Frame>
+    <img
+      src="/images/whatsapp-business-id/5.webp"
+      style={{ borderRadius: "0.5rem" }}
+    />
+  </Frame>
+- Click on Apps under Select asset type, available in the left corner.
+- Click on the Specific App’s checkbox(s) that you want to provide access to the current user under Select Assets, available in the middle section.
+- Click on the Manage app toggle option and enable it for all access, you can customize it by other options available in this App section.
+- Finally, Click on the Save Changes button.
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/6.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+### "Congratulations, you have added assets successfully."
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/7.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+Now you can able to see the added assets in the Assigned assets
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/8.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+<b>'Generate Access Token'</b>
+
+1. Click on the Generate New Token button.
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/9.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+2. Select an App, That you want to generate a token for.
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/10.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+3. You can able to see the list of Info, Warnings, and a section <b>Available permissions.</b>
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/11.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+4. Scroll down to the Available permissions, there is a list of API components, you need to select “whatsapp_business_messaging” and “whatsapp_business_management” for WhatsApp Business APIs access and Click on the Generate Token button.
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/12.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+5. It will appear as a model and you can able to see the newly generated Access Token, Just Copy the Access Token and store it in a safe place i.e. your project’s environment(env) file.
+
+<Frame>
+  <img
+    src="/images/whatsapp-business-id/13.webp"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+<Note>
+  Copy and save this token as it won’t be stored on Facebook, Remember, you can
+  only share a token once. Each new system user requires a newly generated
+  token.
+</Note>
