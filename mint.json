@@ -128,7 +128,10 @@
             "general/integrations/gohighlevel",
             "general/integrations/elevenLabs",
             "general/integrations/cartesia",
-            "general/integrations/zoho"
+            "general/integrations/zoho",
+            "general/integrations/rime",
+            "general/integrations/neuphonic",
+            "general/integrations/lmnt"
           ]
         },
         "general/profileMenu/billing",
