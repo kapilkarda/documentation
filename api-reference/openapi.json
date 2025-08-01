@@ -49,7 +49,7 @@
         }
       }
     },
-    "/campaign": {
+    "/campaign/create": {
       "post": {
         "description": "Creates a new Campaign",
         "requestBody": {
