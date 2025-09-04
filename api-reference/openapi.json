@@ -1327,11 +1327,11 @@
           },
           "assistant_id": {
             "description": "Assistant",
-            "type": "array"
+            "type": "string"
           },
           "dialer_id": {
             "description": "Dialer",
-            "type": "array"
+            "type": "string"
           }
         }
       },
