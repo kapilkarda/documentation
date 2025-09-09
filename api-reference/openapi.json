@@ -428,10 +428,10 @@
     },
     "/segment/list": {
       "get": {
-        "description": "Returns all Contacts from the system that the user has access to",
+        "description": "Returns all Segments from the system that the user has access to",
         "responses": {
           "200": {
-            "description": "Contact response",
+            "description": "Segment response",
             "content": {
               "application/json": {
                 "schema": {
@@ -458,9 +458,9 @@
     },
     "/segment/create": {
       "post": {
-        "description": "Creates a new Contact",
+        "description": "Creates a new segment",
         "requestBody": {
-          "description": "Contact to add",
+          "description": "Segment to add",
           "content": {
             "application/json": {
               "schema": {
@@ -472,7 +472,7 @@
         },
         "responses": {
           "200": {
-            "description": "Contact response",
+            "description": "Segment response",
             "content": {
               "application/json": {
                 "schema": {
@@ -496,7 +496,7 @@
     },
     "/segment/update?id={id}": {
       "put": {
-        "description": "Update a Contact",
+        "description": "Update a segment",
         "parameters": [
           {
             "name": "id",
@@ -505,11 +505,11 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the contact to update"
+            "description": "The ID of the segment to update"
           }
         ],
         "requestBody": {
-          "description": "Contact to update",
+          "description": "Segment to update",
           "content": {
             "application/json": {
               "schema": {
@@ -521,7 +521,7 @@
         },
         "responses": {
           "200": {
-            "description": "Contact response",
+            "description": "Segment response",
             "content": {
               "application/json": {
                 "schema": {
@@ -545,12 +545,12 @@
     },
     "/segment/delete?id={id}": {
       "delete": {
-        "description": "Deletes a single contact based on the ID supplied",
+        "description": "Deletes a single segment based on the ID supplied",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID of contact to delete",
+            "description": "ID of segment to delete",
             "required": true,
             "schema": {
               "type": "string"
@@ -559,7 +559,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Contact deleted",
+            "description": "Segment deleted",
             "content": {}
           },
           "400": {
@@ -577,7 +577,7 @@
     },
     "/segment/contact/list?id={id}": {
       "post": {
-        "description": "Returns all contact's audiences from the system that the user has access to",
+        "description": "Returns all segment's contacts from the system that the user has access to",
         "parameters": [
           {
             "name": "id",
@@ -586,12 +586,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the contact to get audiences"
+            "description": "The ID of the segment to get contacts"
           }
         ],
         "responses": {
           "200": {
-            "description": "Contact audiences response",
+            "description": "Segment contacts response",
             "content": {
               "application/json": {
                 "schema": {
@@ -618,7 +618,7 @@
     },
     "/segment/contact/bulk-upload?id={id}": {
       "post": {
-        "description": "Bulk upload contact's audiences",
+        "description": "Bulk upload segment's contacts",
         "parameters": [
           {
             "name": "id",
@@ -627,7 +627,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the contact to get audiences"
+            "description": "The ID of the segment to get contacts"
           }
         ],
         "requestBody": {
@@ -689,7 +689,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the contact to create audience"
+            "description": "The ID of the Segment to create contact"
           }
         ],
         "requestBody": {
@@ -705,7 +705,7 @@
         },
         "responses": {
           "200": {
-            "description": "Create Contact audience response",
+            "description": "Create Contact response",
             "content": {
               "application/json": {
                 "schema": {
@@ -713,7 +713,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Contact audience created successfully."
+                      "example": "Contact created successfully."
                     }
                   }
                 }
@@ -735,7 +735,7 @@
     },
     "/segment/contact/update?id={id}": {
       "put": {
-        "description": "Update Contact Audience",
+        "description": "Update Segment's Contact",
         "parameters": [
           {
             "name": "id",
@@ -744,7 +744,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the contact to update audience"
+            "description": "The ID of the segment's contact to update contact"
           }
         ],
         "requestBody": {
@@ -760,7 +760,7 @@
         },
         "responses": {
           "200": {
-            "description": "Update Contact audience response",
+            "description": "Update segment's contact response",
             "content": {
               "application/json": {
                 "schema": {
@@ -768,7 +768,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Contact audience updated successfully."
+                      "example": "Contact updated successfully."
                     }
                   }
                 }
@@ -790,12 +790,12 @@
     },
     "/segment/contact/delete?id={id}": {
       "delete": {
-        "description": "Delete a single contact audience based on the ID supplied",
+        "description": "Delete a single Segment's contact based on the ID supplied",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID of contact audience to delete",
+            "description": "ID of segment's contact to delete",
             "required": true,
             "schema": {
               "type": "string"
@@ -804,7 +804,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Contact audience deleted",
+            "description": "Contact deleted",
             "content": {}
           },
           "400": {
@@ -1037,22 +1037,62 @@
       "Assistant": {
         "required": [
           "type",
+          "language",
           "name",
           "company_name",
-          "gender",
           "accent",
           "goal",
           "start_speech",
           "voice_id",
           "voice_name",
           "script",
-          "maximum_time_per_call"
+          "maximum_time_per_call",
+          "is_voice_note",
+          "voice_note",
+          "ai_model_id",
+          "sentiment",
+          "voice_speed",
+          "is_filler",
+          "fillers",
+          "assistant_image",
+          "ai_modal",
+          "sensitivity",
+          "temperature",
+          "opt_out_script",
+          "is_wait_start_speech",
+          "utterance_length",
+          "meeting_note_prompt",
+          "call_outcome_prompt"
+
         ],
         "type": "object",
         "properties": {
           "type": {
-            "description": "Type of assistant",
-            "type": "string"
+            "description": "Type of assistant ",
+            "type": "string",
+            "enum": [
+              "inbound",
+              "outbound"
+            ]
+          },
+          "language": {
+            "description": "Language of the assistant. Supported values: en (English), de (German), hi (Hindi), es (Spanish), fr (French), it (Italian), ar-kw (Arabic Kuwait), gu (Gujarati), bn (Bengali), te (Telugu India), kn (Kannada India), ta (Tamil India), mr (Marathi).",
+            "type": "string",
+            "enum": [
+              "en",
+              "de",
+              "hi",
+              "es",
+              "fr",
+              "it",
+              "ar-kw",
+              "gu",
+              "bn",
+              "te",
+              "kn",
+              "ta",
+              "mr"
+            ]
           },
           "name": {
             "description": "The name of the assistant",
@@ -1062,44 +1102,88 @@
             "description": "The name of the company",
             "type": "string"
           },
-          "gender": {
-            "description": "The gender",
-            "type": "string"
-          },
           "accent": {
             "description": "The accent",
             "type": "string"
           },
           "actions": {
             "description": "The actions",
-            "type": "array"
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["scheduleMeeting"],
+                  "description": "Type of action (currently only scheduleMeeting is supported)"
+                },
+                "meetingType": {
+                  "type": "string",
+                  "enum": ["openBooking"],
+                  "description": "Type of meeting"
+                },
+                "timezone": {
+                  "type": "string",
+                  "description": "Timezone for scheduling"
+                },
+                "startDate": {
+                  "type": "string",
+                  "description": "Start date in YYYY-MM-DD format"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Action description"
+                },
+                "say": {
+                  "type": "string",
+                  "description": "What the assistant should say before executing the action"
+                },
+                "length": {
+                  "type": "integer",
+                  "description": "Length of the meeting in minutes"
+                },
+                "prompt": {
+                  "type": "string",
+                  "description": "Detailed instructions for meeting scheduling"
+                },
+                "startTime": {
+                  "type": "string",
+                  "description": "Start time of booking window (e.g., 09:30 AM)"
+                },
+                "endTime": {
+                  "type": "string",
+                  "description": "End time of booking window (e.g., 06:30 PM)"
+                },
+                "bookingDays": {
+                  "type": "string",
+                  "description": "Comma-separated list of available booking days"
+                }
+              },
+              "required": ["type", "meetingType", "startDate", "startTime", "endTime", "bookingDays"]
+            }
           },
           "goal": {
             "description": "The goal of the assistant",
             "type": "string"
           },
           "start_speech": {
-            "description": "Start speech",
+            "description": "Start speech of the assistant",
             "type": "string"
           },
           "voice_id": {
-            "description": "Voice id",
+            "description": "Voice Id will get where we choose Accent",
             "type": "string"
           },
           "voice_name": {
-            "description": "Voice name",
-            "type": "string"
-          },
-          "voice_note": {
-            "description": "Voice note",
+            "description": "Voice name will get where we choose Accent",
             "type": "string"
           },
           "zapier_hook": {
-            "description": "Zapier hook",
+            "description": "For Zapier hook need to add link",
             "type": "string"
           },
           "script": {
-            "description": "Script",
+            "description": "Script of the assistant",
             "type": "string"
           },
           "knowledge_base_Id": {
@@ -1107,16 +1191,119 @@
             "type": "string"
           },
           "maximum_time_per_call": {
-            "description": "Maximum time per call",
+            "description": "Maximum time per call in minutes",
             "type": "number"
           },
           "is_recording": {
-            "description": "Is recording",
+            "description": "Enable disable recording",
             "type": "boolean"
           },
           "is_voice_note": {
-            "description": "Is voice note",
+            "description": "Enable disable voice note",
             "type": "boolean"
+          },
+          "voice_note": {
+            "description": "Voice note is required if ```is_voice_note``` are enabled.",
+            "type": "string"
+          },
+          "ai_model_id": {
+            "description": "Need to pass default 1",
+            "type": "string",
+            "enum": ["1"]
+          },
+          "sentiment": {
+            "type": "object",
+            "description": "Sentiment classification prompts for analyzing conversations.",
+            "properties": {
+              "general_prompt": {
+                "type": "string",
+                "description": "General instruction for analyzing customer interactions."
+              },
+              "positive_prompt": {
+                "type": "string",
+                "description": "If the customer is happy with the service, classify it as positive."
+              },
+              "negative_prompt": {
+                "type": "string",
+                "description": "If the customer is complaining, classify it as negative."
+              },
+              "neutral_prompt": {
+                "type": "string",
+                "description": "If the conversation is just informational, classify it as neutral."
+              }
+            }
+          },
+          "is_back_sound": {
+            "description": "Background sound enable/disable",
+            "type": "boolean",
+            "enum": [true, false]
+          },
+          "voice_speed": {
+            "description": "Voice speed sound enable/disable",
+            "type": "number",
+            "enum": [1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2]
+          },
+          "is_filler": {
+            "description": "Filler enable/disable",
+            "type": "boolean",
+            "enum": [true, false]
+          },
+          "fillers" : {
+            "description": "Fillers",
+            "type": "array",
+            "enum": ["umm", "uhh"]
+          },
+          "assistant_image": {
+            "description": "Assistant image url",
+            "type": "string",
+            "enum": ["https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/1.jpeg", "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/1.jpeg", "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/3.jpeg", "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/4.jpeg", "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/5.jpeg"]
+          },
+          "ai_modal": {
+            "description": "AI modal will get where we choose Accent",
+            "type": "string"
+          },
+          "is_sensitivity": {
+            "description": "Sensitivity enable/disable",
+            "type": "boolean",
+            "enum": [true, false]
+          },
+          "sensitivity": {
+            "description": "Sensitivity",
+            "type": "number",
+            "enum": [600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000]
+          },
+          "temperature": {
+            "description": "Temperature",
+            "type": "number",
+            "enum": [0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2]
+          },
+          "is_opt_out": {
+            "description": "Opt out enable/disable",
+            "type": "boolean",
+            "enum": [true, false]
+          },
+          "opt_out_script": {
+            "description": "If ```is_opt_out``` is enable then add opt out prompts",
+            "type": "string",
+            "enum": ["If a user explicitly expresses that they no longer wish to receive calls, such as by saying 'Don't call me again,' 'I'm not interested,' or any similar phrase indicating that they want to opt out of future communications, please trigger the 'optOut' function and inform the user that they will no longer be contacted for calls."]
+          },
+          "is_wait_start_speech": {
+            "description": "For assistant typle is ```outbound``` then you can enable or disable",
+            "type": "boolean",
+            "enum": [true, false]
+          },
+          "utterance_length": {
+            "description": "Utterance length",
+            "type": "number",
+            "enum": [1,2,3,4,5,6,7,8,9,10]
+          },
+          "meeting_note_prompt": {
+            "description": "Meeting note prompt",
+            "type": "string"
+          },
+          "call_outcome_prompt": {
+            "description": "Call outcome prompt",
+            "type": "string"
           }
         }
       },
@@ -1146,13 +1333,15 @@
           "name",
           "phone_number",
           "sid",
-          "auth_token"
+          "auth_token",
+          "sip_termination_uri"
         ],
         "type": "object",
         "properties": {
           "dialer_type": {
             "description": "Dialer type",
-            "type": "string"
+            "type": "string",
+            "enum": ["Twilio","Telnyx","sip"]
           },
           "name": {
             "description": "The name of the dialer",
@@ -1167,7 +1356,19 @@
             "type": "string"
           },
           "auth_token": {
-            "description": "Auth token",
+            "description": "Auth token and also for Telnyx id not require.",
+            "type": "string"
+          },
+          "sip_termination_uri": {
+            "description": "SIP termination uri for only sip",
+            "type": "string"
+          },
+          "sip_trunk_user_name": {
+            "description": "SIP trunk user name for only sip",
+            "type": "string"
+          },
+          "sip_trunk_password": {
+            "description": "SIP trunk password for only sip",
             "type": "string"
           }
         }
@@ -1260,7 +1461,7 @@
         }
       },
       "ContactAudienceNew": {
-        "required": ["first_name", "last_name", "email", "phone"],
+        "required": ["first_name", "last_name", "phone"],
         "type": "object",
         "properties": {
           "first_name": {
