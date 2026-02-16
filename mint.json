@@ -97,6 +97,14 @@
           ]
         },
         {
+          "group": "Connect via SIP trunking",
+          "pages": [
+            "general/sip/twilio",
+            "general/sip/telnyx",
+            "general/sip/vonage"
+          ]
+        },
+        {
           "group": "Campaigns",
           "pages": [
             "general/campaigns/introduction",
@@ -262,14 +270,6 @@
         "api-reference/dialers/create",
         "api-reference/dialers/update",
         "api-reference/dialers/delete"
-      ]
-    },
-    {
-      "group": "Connect via SIP trunking",
-      "pages": [
-        "general/sip/twilio",
-        "general/sip/telnyx",
-        "general/sip/vonage"
       ]
     },
     {
