@@ -1,0 +1,63 @@
+---
+title: Vonage
+description: "A step by step guide to connect to your Vonage account via SIP trunking"
+---
+
+## Steps
+
+
+<Steps>
+  <Step title="Create Elastic SIP Trunking">
+    1. Locate the SIP section in Vonage dashboard, and select other for
+
+    <Frame>
+        <img src="/images/sip/sip.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    <Frame>
+        <img src="/images/sip/choose-provider.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    From now on, you will just be following the instructions step by step.
+
+    2. Setup termination (this is for outbound)
+
+    <ul>
+        <li>the termination SIP URI and the username and password here is important, we would use it in later steps, please take notes of it.</li>
+    </ul>
+    <Frame>
+        <img src="/images/sip/termination1.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    3. Setup origination (this is for inbound)
+    
+    <ul>
+        <li>
+            Here you will specify PreCallAI’s SIP server address as the origination SIP URI:
+            <code><Snippet file="sip-uri.mdx" /></code>
+        </li>
+    </ul>
+
+    <Frame>
+        <img src="/images/sip/origination1.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+     
+  </Step>
+  <Step title="Move numbers to Elastic SIP Trunking">
+
+    You’ve created the elastic SIP trunk, now you would need to purchase numbers / move existing numbers to this trunk.
+
+    <Frame>
+        <img src="/images/sip/assign-number.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+  </Step>
+  <Step title="Import numbers to PreCallAI">
+    Now the number is set up with your elastic SIP trunking, you need to import the number to PreCallAI so that we will know how to route the call.
+
+    Here you will supply the termination SIP URI, the username and password you set up in Step 1.
+
+    <Frame>
+        <img src="/images/sip/fillall.png" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+  </Step>
+</Steps>

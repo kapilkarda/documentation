@@ -1,0 +1,113 @@
+---
+title: Twilio
+description: "A step by step guide to connect to your Twilio account via SIP trunking"
+---
+
+## Steps
+
+
+<Steps>
+  <Step title="Create Elastic SIP Trunking">
+    1. Create the trunk, give it a name, and toggle some general settings
+    <Frame>
+        <img src="/images/sip/general.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    2. Setup termination (this is for outbound)
+
+    <ul>
+        <li>
+            the termination SIP URI here is important, we would use it in later steps. You might want to use a localized termination uri that’s near your region. You can expand and view your localized uris in the twilio console.
+        </li>
+    </ul>
+    <Frame>
+        <img src="/images/sip/termination.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+    <ul>
+        <li>
+            For your elastic SIP trunk to accept our outbound request, you need to whitelist IP address or create a auth with username and password.
+            <ul>
+                <li>
+                    If you opt for the auth route, you need to specify the username and password in the next step when importing the number to PreCallAI.
+                </li>
+            </ul>
+            <Frame>
+                <img src="/images/sip/auth.jpeg" style={{ borderRadius: '0.5rem' }} />
+            </Frame>
+            <ul>
+                <li>
+                    Currently PreCallAI SIP server does not have a static IP, so if you opt for the IP route, you need to whitelist all the IP addresses in the range like following:
+                </li>
+            </ul>
+            
+            <Frame>
+                <img src="/images/sip/acl1.jpeg" style={{ borderRadius: '0.5rem' }} />
+            </Frame>
+            <Frame>
+                <img src="/images/sip/acl2.jpeg" style={{ borderRadius: '0.5rem' }} />
+            </Frame>
+        </li>
+    </ul>
+    3. Setup origination (this is for inbound)
+    <ul>
+        <li>
+            Here you will specify PreCallAI’s SIP server address as the origination SIP URI:
+            <code><Snippet file="sip-uri.mdx" /></code>.
+        </li>
+    </ul>
+    <Frame>
+        <img src="/images/sip/origination.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+     
+  </Step>
+  <Step title="Move numbers to Elastic SIP Trunking">
+    You’ve created the elastic SIP trunk, now you would need to purchase numbers / move existing numbers to this trunk.
+
+    <Frame>
+        <img src="/images/sip/numbers.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+  </Step>
+  <Step title="Import numbers to PreCallAI">
+    Now the number is set up with your elastic SIP trunking, you need to import the number to PreCallAI so that we will know how to route the call.
+
+    <Frame>
+        <img src="/images/sip/selectsip.png" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    Here you will supply the termination SIP URI you set up in Step 1. If you have set up auth via credentials, you will need to supply the username and password as well.
+
+    <Frame>
+        <img src="/images/sip/fillall.png" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+  </Step>
+</Steps>
+
+## Common Issues
+
+#### 1. After connecting, inbound works but outbound does not work?
+
+<ul>
+    <li>Check your Termination SIP URI If there’s a space in it, please remove. Also you should use a localized termination uri that’s near your region. Check out this [doc](https://www.twilio.com/docs/global-infrastructure/localized-uris/termination) to select one.</li>
+
+    <li>Check your user name and credentials Please make sure you entered the right user name and credentials which shows in this dialog. Please note the user name is not the friendly name that shows in the credential list. The friendly is different to user name, you need to double check if you happen to give a different name.</li>
+</ul>
+
+<Frame>
+    <img src="/images/sip/credentials.png" style={{ borderRadius: '0.5rem' }} />
+</Frame>
+
+#### 2. How do I set up dialing to international countries?
+
+<ul>
+    <li>Search “geo” to find the “Voice Geographic Permissions” setting.</li>
+</ul>
+<Frame>
+    <img src="/images/sip/geo.png" style={{ borderRadius: '0.5rem' }} />
+</Frame>
+<ul>
+    <li>Choose “Elastic Sip Trunking” in selector, and select the countries you would like to dial.</li>
+</ul>
+<Frame>
+    <img src="/images/sip/international.png" style={{ borderRadius: '0.5rem' }} />
+</Frame>

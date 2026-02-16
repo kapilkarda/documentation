@@ -1,0 +1,473 @@
+---
+title: Custom Variables
+---
+
+# User Guide: Using Variables in Scripts
+
+> **For**: Campaign Managers, Script Designers  
+> **Last Updated**: January 26, 2026
+
+---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Quick Start](#quick-start)
+3. [Variable Syntax](#variable-syntax)
+4. [Standard Variables](#standard-variables)
+5. [Custom Variables via Description Field](#custom-variables-via-description-field)
+6. [CSV Upload with Variables](#csv-upload-with-variables)
+7. [Examples by Industry](#examples-by-industry)
+8. [Best Practices](#best-practices)
+9. [Troubleshooting](#troubleshooting)
+
+---
+
+## Introduction
+
+Variables allow you to personalize AI voice calls by inserting dynamic data into your scripts. Instead of generic greetings like "Hello customer", you can say "Hello John, I'm calling about your Honda City".
+
+### What Variables Can Do
+
+✅ Personalize greetings with customer names  
+✅ Reference specific products, policies, or orders  
+✅ Include custom data like appointment dates, locations  
+✅ Support multiple languages  
+✅ Make calls feel natural and relevant
+
+---
+
+## Quick Start
+
+### Step 1: Add Variables to Your Script
+
+In your script editor, use double curly braces:
+
+```
+Hello {{first_name}}, I'm calling from {{company_name}} 
+regarding your {{product_name}}.
+```
+
+### Step 2: Provide Values in CSV or Description
+
+**Option A: CSV Upload**
+```csv
+phone,first_name,last_name,product_name
++1234567890,John,Doe,Honda City
++0987654321,Jane,Smith,Toyota Camry
+```
+
+**Option B: Description Field**
+```json
+{"product_name": "Honda City", "policy_number": "POL-12345"}
+```
+
+### Step 3: AI Speaks Personalized Script
+
+The AI will say:
+> "Hello John, I'm calling from ABC Motors regarding your Honda City."
+
+---
+
+## Variable Syntax
+
+### Format
+
+Variables use **double curly braces**: `{{variable_name}}`
+
+### Rules
+
+| Rule | Example | Notes |
+|------|---------|-------|
+| Use lowercase with underscores | `{{first_name}}` ✅ | Not `{{FirstName}}` |
+| No spaces inside braces | `{{product_name}}` ✅ | Not `{{ product name }}` |
+| Letters, numbers, underscores only | `{{order_id_123}}` ✅ | Not `{{order-id}}` |
+
+### Valid Examples
+
+```
+{{first_name}}
+{{last_name}}
+{{product_name}}
+{{appointment_date}}
+{{policy_number}}
+{{dealer_location}}
+{{custom_field_1}}
+```
+
+---
+
+## Standard Variables
+
+These variables are automatically available from your contact list:
+
+| Variable | Description | Example Value |
+|----------|-------------|---------------|
+| `{{first_name}}` | Contact's first name | John |
+| `{{last_name}}` | Contact's last name | Doe |
+| `{{full_name}}` | First + Last name | John Doe |
+| `{{email}}` | Contact's email | john@example.com |
+| `{{phone}}` | Contact's phone number | +1234567890 |
+
+### Usage in Script
+
+```
+Hello {{first_name}} {{last_name}}, 
+
+I'm reaching out from XYZ Insurance regarding your policy. 
+We have your email as {{email}} - is that still correct?
+```
+
+---
+
+## Custom Variables via Description Field
+
+For additional personalization, use the **Description** field when creating contacts or campaigns.
+
+> **⚠️ CRITICAL WARNING: PREVENTING HALLUCINATIONS**
+> When using custom variables (especially in segments), you **MUST** ensure that every contact has a valid description containing the required variables.
+>
+> If a proper description is not added, the AI may **hallucinate** or invent information to fill the missing script placeholders. This can lead to the AI stating incorrect names, dates, or details. To prevent this, always ensure your contact descriptions are complete and accurate before launching a campaign.
+
+### Format Options
+
+#### Option 1: JSON Format (Recommended)
+
+```json
+{
+  "product_name": "Honda Glamour",
+  "model_year": "2024",
+  "dealer_name": "ABC Motors",
+  "service_date": "February 15, 2026",
+  "warranty_status": "Active"
+}
+```
+
+#### Option 2: Key-Value Format
+
+```
+product_name: Honda Glamour
+model_year: 2024
+dealer_name: ABC Motors
+service_date: February 15, 2026
+```
+
+#### Option 3: Equals Format
+
+```
+product_name=Honda Glamour; model_year=2024; dealer_name=ABC Motors
+```
+
+### Using Custom Variables in Script
+
+```
+Hello {{first_name}}, I'm calling from {{dealer_name}} about your 
+{{model_year}} {{product_name}}. 
+
+Your scheduled service date is {{service_date}}. 
+Would this time work for you?
+```
+
+**Result:**
+> "Hello John, I'm calling from ABC Motors about your 2024 Honda Glamour. Your scheduled service date is February 15, 2026. Would this time work for you?"
+
+---
+
+## CSV Upload with Variables
+
+### CSV Structure
+
+Your CSV file should have columns matching the variable names:
+
+```csv
+phone,first_name,last_name,email,product_name,appointment_date,location
++1234567890,John,Doe,john@email.com,Honda City,March 10,Mumbai
++0987654321,Jane,Smith,jane@email.com,Toyota Camry,March 12,Delhi
++1122334455,Raj,Kumar,raj@email.com,Maruti Swift,March 15,Bangalore
+```
+
+### Column Name Mapping
+
+| CSV Column | Variable in Script |
+|------------|-------------------|
+| `phone` | Used for calling (required) |
+| `first_name` | `{{first_name}}` |
+| `last_name` | `{{last_name}}` |
+| `email` | `{{email}}` |
+| `product_name` | `{{product_name}}` |
+| `appointment_date` | `{{appointment_date}}` |
+| `location` | `{{location}}` |
+
+### Tips for CSV
+
+1. **First row must be headers** (column names)
+2. **Phone column is required** for making calls
+3. **Use consistent naming** - `first_name` not `FirstName` or `First Name`
+4. **Avoid special characters** in values that might confuse the AI
+
+---
+
+## Examples by Industry
+
+### 🚗 Automotive - Service Reminder
+
+**Description Field:**
+```json
+{
+  "vehicle_model": "Honda City",
+  "vehicle_year": "2023",
+  "last_service_date": "September 2025",
+  "service_due": "March 2026",
+  "dealer_name": "Sunrise Honda"
+}
+```
+
+**Script:**
+```
+Hello {{first_name}}, this is a courtesy call from {{dealer_name}}.
+
+I'm calling regarding your {{vehicle_year}} {{vehicle_model}}. 
+Our records show your last service was in {{last_service_date}}, 
+and your next service is due in {{service_due}}.
+
+Would you like to schedule an appointment?
+
+[If Yes] → Great! What day works best for you?
+[If No] → No problem. We'll send you a reminder closer to the date.
+```
+
+---
+
+### 🏥 Healthcare - Appointment Reminder
+
+**Description Field:**
+```json
+{
+  "doctor_name": "Dr. Sarah Johnson",
+  "appointment_date": "February 20, 2026",
+  "appointment_time": "10:30 AM",
+  "clinic_name": "City Health Clinic",
+  "clinic_address": "123 Medical Plaza"
+}
+```
+
+**Script:**
+```
+Hello {{first_name}}, this is a reminder from {{clinic_name}}.
+
+You have an appointment with {{doctor_name}} on {{appointment_date}} 
+at {{appointment_time}}.
+
+Our clinic is located at {{clinic_address}}.
+
+Can we confirm your attendance?
+
+[If Yes] → Wonderful! Please arrive 15 minutes early.
+[If Reschedule] → Sure, let me check available slots for you.
+```
+
+---
+
+### 🏦 Banking - Loan Follow-up
+
+**Description Field:**
+```json
+{
+  "loan_type": "Home Loan",
+  "loan_amount": "₹50,00,000",
+  "interest_rate": "8.5%",
+  "branch_name": "MG Road Branch",
+  "relationship_manager": "Amit Sharma"
+}
+```
+
+**Script:**
+```
+Hello {{first_name}}, I'm calling from ABC Bank, {{branch_name}}.
+
+You recently inquired about our {{loan_type}} options. 
+We can offer you up to {{loan_amount}} at {{interest_rate}} interest rate.
+
+Your relationship manager {{relationship_manager}} would like to 
+discuss this further. Would you like to schedule a call with them?
+
+[If Yes] → Great! When would be a convenient time?
+[If More Info] → Sure, I can provide more details right now.
+```
+
+---
+
+### 📦 E-commerce - Order Delivery
+
+**Description Field:**
+```json
+{
+  "order_id": "ORD-789456",
+  "product_ordered": "Samsung Galaxy S24",
+  "delivery_date": "February 18, 2026",
+  "delivery_slot": "2 PM - 6 PM"
+}
+```
+
+**Script:**
+```
+Hello {{first_name}}, this is regarding your order {{order_id}}.
+
+Your {{product_ordered}} is scheduled for delivery on {{delivery_date}} 
+between {{delivery_slot}}.
+
+Will someone be available to receive the package?
+
+[If Yes] → Perfect! Our delivery partner will call before arriving.
+[If Reschedule] → No problem, let me check alternative slots.
+```
+
+---
+
+### 🎓 Education - Admission Follow-up
+
+**Description Field:**
+```json
+{
+  "course_name": "MBA in Finance",
+  "intake_date": "July 2026",
+  "scholarship_status": "Eligible for 20% scholarship",
+  "counselor_name": "Priya Patel"
+}
+```
+
+**Script:**
+```
+Hello {{first_name}}, I'm calling from ABC University.
+
+I understand you're interested in our {{course_name}} program 
+for the {{intake_date}} intake.
+
+Good news - based on your profile, you are {{scholarship_status}}.
+
+Would you like to speak with our counselor {{counselor_name}} 
+for more details?
+
+[If Yes] → Excellent! Let me connect you or schedule a call.
+[If Later] → Sure, when would be a good time to call back?
+```
+
+---
+
+## Best Practices
+
+### ✅ DO
+
+1. **Test your scripts** with sample data before launching campaigns
+2. **Have fallbacks** for missing variables:
+   ```
+   Hello {{first_name}}, ... 
+   ```
+   If `first_name` is empty, the system will remove the placeholder gracefully.
+
+3. **Keep variable names descriptive**:
+   - Good: `{{appointment_date}}`, `{{product_model}}`
+   - Bad: `{{x1}}`, `{{data}}`
+
+4. **Match CSV columns to variable names exactly**
+
+5. **Use proper capitalization in values** (not variable names):
+   - CSV value: `John` (capitalized)
+   - Variable: `{{first_name}}` (lowercase)
+
+### ❌ DON'T
+
+1. **Don't use spaces in variable names**:
+   - Wrong: `{{first name}}`
+   - Right: `{{first_name}}`
+
+2. **Don't use special characters**:
+   - Wrong: `{{user-name}}`, `{{product.type}}`
+   - Right: `{{user_name}}`, `{{product_type}}`
+
+3. **Don't assume variables will always have values** - design scripts to work even if some data is missing
+
+4. **Don't put sensitive data** (passwords, full SSN) in variables
+
+---
+
+## Troubleshooting
+
+### Variable Not Replaced
+
+**Problem**: AI says `{{first_name}}` literally instead of the name.
+
+**Solutions**:
+1. Check variable name spelling matches exactly
+2. Ensure CSV column header matches variable name
+3. Check Description field JSON is valid
+4. Look for typos in curly braces
+
+### Empty Variable
+
+**Problem**: AI pauses awkwardly where variable should be.
+
+**Solutions**:
+1. Ensure data exists in CSV/Description
+2. Check for empty cells in CSV
+3. System removes empty placeholders - rewrite script to flow naturally
+
+### Wrong Value Inserted
+
+**Problem**: Wrong customer name or product mentioned.
+
+**Solutions**:
+1. Verify CSV row matches the phone number
+2. Check for duplicate phone numbers
+3. Ensure Description field is unique per contact
+
+### Variable Appears Twice
+
+**Problem**: `{{first_name}}` shows the name, then shows `{{first_name}}` as text.
+
+**Solution**: Check for duplicate variable in script - maybe in a hidden node or edge.
+
+---
+
+## Support
+
+If you need help with script variables:
+
+1. **Check this documentation** first
+2. **Test with a sample contact** before bulk campaigns
+3. **Contact support** with:
+   - Your script content
+   - Sample CSV row
+   - Description field value
+   - What the AI actually said
+
+---
+
+## Quick Reference Card
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 VARIABLE QUICK REFERENCE                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  SYNTAX:        {{variable_name}}                           │
+│                                                              │
+│  STANDARD:      {{first_name}}  {{last_name}}  {{email}}    │
+│                 {{phone}}  {{full_name}}                     │
+│                                                              │
+│  CUSTOM:        Add in Description field as JSON:           │
+│                 {"key": "value", "key2": "value2"}          │
+│                                                              │
+│  CSV HEADER:    Must match variable name exactly            │
+│                 first_name → {{first_name}}                 │
+│                                                              │
+│  EXAMPLE:       Hello {{first_name}}, calling about your    │
+│                 {{product_name}}. Your appointment is on    │
+│                 {{appointment_date}}.                        │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+*Need more help? Contact info@qcall.ai*

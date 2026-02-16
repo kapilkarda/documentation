@@ -1,0 +1,80 @@
+---
+title: Telnyx
+description: "A step by step guide to connect to your Telnyx account via SIP trunking"
+---
+
+## Steps
+
+
+<Steps>
+  <Step title="Create Elastic SIP Trunking">
+    1. Create the trunk, select FQDN as the type, and give it a name.
+    <Frame>
+        <img src="/images/sip/create.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    2. Add FQDN Add the FQDN of PreCallAI’s SIP server:
+    <code><Snippet file="sip-uri.mdx" /></code>. Select <code>SRC</code> as the DNS record type.
+
+    <Frame>
+        <img src="/images/sip/setting.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    3. Setup Outbound Calls Authentication
+    
+    Select credentials as the authentication method, and add the username and password. You will need to use this username and password when importing the number to PreCallAI.
+
+    <Frame>
+        <img src="/images/sip/outbound-auth.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+    
+    4. Setup Inbound Setting
+
+    <ul>
+        <li>Select <code>+E.164</code> as the number format.</li>
+        <li>Select <code>G722</code>, <code>G729</code>, <code>OPUS</code> as the codec.</li>
+        <li>Select <code>TCP</code> as the transport method. (UDP temporarily not supported due to a connectivity issue)</li>
+        <li>Select your SIP region.</li>
+    </ul>
+    <Frame>
+        <img src="/images/sip/inbound-setting.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    5. Setup Outbound Setting
+
+    Create a new outbound voice profile
+
+    <Frame>
+        <img src="/images/sip/voice-profile.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    And select that in the outbound setting
+
+    <Frame>
+        <img src="/images/sip/outbound-setting.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+     
+  </Step>
+  <Step title="Move numbers to Elastic SIP Trunking">
+
+    You’ve created the elastic SIP trunk, now you would need to purchase numbers / move existing numbers to this trunk.
+
+    <Frame>
+        <img src="/images/sip/assign-number.jpeg" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+  </Step>
+  <Step title="Import numbers to PreCallAI">
+    Now the number is set up with your elastic SIP trunking, you need to import the number to PreCallAI so that we will know how to route the call.
+
+    <Frame>
+        <img src="/images/sip/selectsip.png" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+    Here you will supply the termination SIP URI you set up in Step 1. If you have set up auth via credentials, you will need to supply the username and password as well.
+
+    <Frame>
+        <img src="/images/sip/fillall.png" style={{ borderRadius: '0.5rem' }} />
+    </Frame>
+
+  </Step>
+</Steps>

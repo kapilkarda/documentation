@@ -25,7 +25,7 @@
     },
     {
       "name": "Support",
-      "url": "mailto:info@qcall.com"
+      "url": "mailto:info@qcall.ai"
     }
   ],
   "topbarCtaButton": {
@@ -109,6 +109,7 @@
     {
       "group": "Customization",
       "pages": [
+        "general/customVariables",
         "general/profileMenu/knowledgebase",
         {
           "group": "Integrations",
@@ -261,6 +262,14 @@
         "api-reference/dialers/create",
         "api-reference/dialers/update",
         "api-reference/dialers/delete"
+      ]
+    },
+    {
+      "group": "Connect via SIP trunking",
+      "pages": [
+        "general/sip/twilio",
+        "general/sip/telnyx",
+        "general/sip/vonage"
       ]
     },
     {
