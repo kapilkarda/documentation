@@ -4,7 +4,7 @@
 The SIP URI has been centralized using Mintlify's snippet feature for easy maintenance across all documentation files.
 
 ## Current Configuration
-- **SIP URI**: `sip:31.220.77.222:5060`
+- **SIP URI**: `sip:34.14.190.125:5060`
 - **Snippet File**: `docs/snippets/sip-uri.mdx`
 
 ## Files Updated
