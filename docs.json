@@ -1,0 +1,324 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "qcallai docs",
+  "colors": {
+    "primary": "#7C53FC",
+    "light": "#7C53FC",
+    "dark": "#7C53FC"
+  },
+  "favicon": "/favicon.png",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "general/dashboard",
+              "ai-features"
+            ]
+          },
+          {
+            "group": "QCall Ai Enterprise",
+            "pages": [
+              "general/enterprise/fineTuning",
+              "general/enterprise/rateLimit"
+            ]
+          },
+          {
+            "group": "Contacts Management CRM",
+            "pages": [
+              "general/contacts/contacts",
+              "general/contacts/companies",
+              {
+                "group": "Segments",
+                "pages": [
+                  "general/contacts/segmentList/introduction",
+                  "general/contacts/segmentList/addContacts",
+                  "general/contacts/segmentList/modifyContacts"
+                ]
+              },
+              "general/contacts/deals"
+            ]
+          },
+          {
+            "group": "Call Platforms",
+            "pages": [
+              {
+                "group": "Assistants",
+                "pages": [
+                  "general/assistants/introduction",
+                  {
+                    "group": "Create Assistant",
+                    "icon": "head-side",
+                    "pages": [
+                      "general/assistants/createAssistant",
+                      "general/assistants/assistantAction",
+                      "general/assistants/webhookIntegration"
+                    ]
+                  },
+                  "general/assistants/testAssistant"
+                ]
+              },
+              "general/assistants/playground",
+              {
+                "group": "Dialers",
+                "pages": [
+                  "general/dialer/introduction",
+                  "general/dialer/integrateDialer"
+                ]
+              },
+              {
+                "group": "Connect via SIP trunking",
+                "pages": [
+                  "general/sip/twilio",
+                  "general/sip/telnyx",
+                  "general/sip/vonage"
+                ]
+              },
+              {
+                "group": "Campaigns",
+                "pages": [
+                  "general/campaigns/introduction",
+                  "general/campaigns/statesCampaign"
+                ]
+              },
+              "general/callLogs"
+            ]
+          },
+          {
+            "group": "Customization",
+            "pages": [
+              "general/customVariables",
+              "general/profileMenu/knowledgebase",
+              {
+                "group": "Integrations",
+                "pages": [
+                  "general/integrations/introduction",
+                  "general/integrations/hubspot",
+                  "general/integrations/salesforce",
+                  "general/integrations/smtp",
+                  {
+                    "group": "WhatsApp",
+                    "pages": [
+                      "general/integrations/whatsapp",
+                      "general/integrations/whatsappBusinessApiSetup",
+                      "general/integrations/whatsappAccessToken"
+                    ]
+                  },
+                  "general/integrations/gohighlevel",
+                  "general/integrations/elevenLabs",
+                  "general/integrations/cartesia",
+                  "general/integrations/zoho",
+                  "general/integrations/rime",
+                  "general/integrations/neuphonic",
+                  "general/integrations/lmnt"
+                ]
+              },
+              "general/profileMenu/billing",
+              "general/profileMenu/support"
+            ]
+          },
+          {
+            "group": "Apps",
+            "pages": [
+              {
+                "group": "Connections",
+                "pages": [
+                  "general/apps/airtable/airtable",
+                  "general/apps/anthropic/anthropic",
+                  "general/apps/appwrite/appwrite",
+                  "general/apps/brave-search/brave-search",
+                  "general/apps/carbone/carbone",
+                  "general/apps/clickup/clickup",
+                  "general/apps/cryptography/cryptography",
+                  "general/apps/datastore/datastore",
+                  "general/apps/deepl/deepl",
+                  "general/apps/delay/delay",
+                  "general/apps/discord/discord",
+                  "general/apps/disqus/disqus",
+                  "general/apps/dropbox/dropbox",
+                  "general/apps/filter/filter",
+                  "general/apps/flickr/flickr",
+                  "general/apps/formatter/formatter",
+                  "general/apps/freescout/freescout",
+                  "general/apps/ghost/ghost",
+                  "general/apps/gitea/gitea",
+                  "general/apps/github/github",
+                  "general/apps/gitlab/gitlab",
+                  "general/apps/gmail/gmail",
+                  "general/apps/google-calendar/google-calendar",
+                  "general/apps/google-drive/google-drive",
+                  "general/apps/google-forms/google-forms",
+                  "general/apps/google-sheets/google-sheets",
+                  "general/apps/google-tasks/google-tasks",
+                  "general/apps/http-request/http-request",
+                  "general/apps/hubspot/hubspot",
+                  "general/apps/invoice-ninja/invoice-ninja",
+                  "general/apps/jotform/jotform",
+                  "general/apps/mailchimp/mailchimp",
+                  "general/apps/mailerlite/mailerlite",
+                  "general/apps/mattermost/mattermost",
+                  "general/apps/miro/miro",
+                  "general/apps/mistral-ai/mistral-ai",
+                  "general/apps/monday/monday",
+                  "general/apps/notion/notion",
+                  "general/apps/ntfy/ntfy",
+                  "general/apps/odoo/odoo",
+                  "general/apps/openai/openai",
+                  "general/apps/openrouter/openrouter",
+                  "general/apps/perplexity/perplexity",
+                  "general/apps/pipedrive/pipedrive",
+                  "general/apps/placetel/placetel",
+                  "general/apps/postgresql/postgresql",
+                  "general/apps/pushover/pushover",
+                  "general/apps/qcall/qcall",
+                  "general/apps/reddit/reddit",
+                  "general/apps/removebg/removebg",
+                  "general/apps/rss/rss",
+                  "general/apps/salesforce/salesforce",
+                  "general/apps/scheduler/scheduler",
+                  "general/apps/signalwire/signalwire",
+                  "general/apps/slack/slack",
+                  "general/apps/smtp/smtp",
+                  "general/apps/spotify/spotify",
+                  "general/apps/strava/strava",
+                  "general/apps/stripe/stripe",
+                  "general/apps/telegram-bot/telegram-bot",
+                  "general/apps/todoist/todoist",
+                  "general/apps/together-ai/together-ai",
+                  "general/apps/trello/trello",
+                  "general/apps/twilio/twilio",
+                  "general/apps/twitter/twitter",
+                  "general/apps/typeform/typeform",
+                  "general/apps/virtualq/virtualq",
+                  "general/apps/vtiger-crm/vtiger-crm",
+                  "general/apps/webhooks/webhooks",
+                  "general/apps/wordpress/wordpress",
+                  "general/apps/xero/xero",
+                  "general/apps/you-need-a-budget/you-need-a-budget",
+                  "general/apps/youtube/youtube",
+                  "general/apps/zendesk/zendesk"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Glossary",
+            "pages": [
+              "general/glossary/faq"
+            ]
+          },
+          {
+            "group": "Legal",
+            "pages": [
+              "general/legal/privacy_policy",
+              "general/legal/terms_and_conditions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Authorization",
+            "pages": [
+              "api-reference/authorization"
+            ]
+          },
+          {
+            "group": "Assistants",
+            "pages": [
+              "api-reference/assistants/get",
+              "api-reference/assistants/create",
+              "api-reference/assistants/update",
+              "api-reference/assistants/delete"
+            ]
+          },
+          {
+            "group": "Playground",
+            "pages": [
+              "api-reference/playground/getHistory",
+              "api-reference/playground/create"
+            ]
+          },
+          {
+            "group": "Dialers",
+            "pages": [
+              "api-reference/dialers/get",
+              "api-reference/dialers/create",
+              "api-reference/dialers/update",
+              "api-reference/dialers/delete"
+            ]
+          },
+          {
+            "group": "Segments",
+            "pages": [
+              "api-reference/segments/get",
+              "api-reference/segments/create",
+              "api-reference/segments/update",
+              "api-reference/segments/delete",
+              "api-reference/segments/createAudience",
+              "api-reference/segments/audienceList",
+              "api-reference/segments/updateAudience",
+              "api-reference/segments/deleteAudience",
+              "api-reference/segments/bulkUpload"
+            ]
+          },
+          {
+            "group": "Campaigns",
+            "pages": [
+              "api-reference/campaigns/get",
+              "api-reference/campaigns/create",
+              "api-reference/campaigns/audienceList"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Dashboard",
+          "href": "https://app.qcall.ai/admin/dashboard",
+          "icon": "house"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/light_logo.png",
+    "dark": "/logo/dark_logo.png"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Home",
+        "href": "https://qcall.ai"
+      },
+      {
+        "label": "Support",
+        "href": "mailto:info@qcall.ai"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://app.qcall.ai/admin/dashboard"
+    }
+  },
+  "seo": {
+    "indexing": "all"
+  },
+  "footer": {
+    "socials": {
+      "facebook": "https://www.facebook.com/profile.php?id=61558206635365",
+      "twitter": "https://twitter.com/qcallai",
+      "instagram": "https://www.instagram.com/qcallai/"
+    }
+  }
+}

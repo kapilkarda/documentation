@@ -1,0 +1,276 @@
+---
+title: Webhook Integration
+description: "This document explains how to configure and receive webhooks from the **QCall** platform. A webhook lets your QCall assistant forward collected call information to your own server or any 3rd-party service (CRM, Zapier, Make, your API, Google Sheets, etc.) in real time."
+---
+
+
+## 1. Overview
+
+QCall supports **two webhook trigger modes**. You configure them from the **Tools** section of your assistant inside the QCall Dashboard.
+
+| Trigger | Fires When | Typical Use Case |
+|---------|------------|------------------|
+| **In-Call Webhook** | Triggered by the AI *during* the conversation (e.g. "check my order", "fetch product details"). | Real-time data lookups, order verification, stock checks. |
+| **End-of-Call Webhook** (*Trigger on call end*) | Fires *after* the call ends. The AI fills the configured fields from the full transcript. | Post-call reporting, CRM push, logging, analytics. |
+
+This guide focuses on the **End-of-Call Webhook** — the most common client integration.
+
+---
+
+## 2. How It Works (Flow)
+
+```
+┌───────────┐     1. Voice Call     ┌──────────────┐
+│  Caller   │ ───────────────────► │ QCall Agent  │
+└───────────┘                       └──────┬───────┘
+                                           │ 2. Call Ends
+                                           ▼
+                                 ┌────────────────────┐
+                                 │  Transcript + Data │
+                                 └─────────┬──────────┘
+                                           │ 3. AI extracts fields
+                                           ▼
+                                 ┌────────────────────┐
+                                 │  Webhook Payload   │
+                                 │  (JSON body)       │
+                                 └─────────┬──────────┘
+                                           │ 4. HTTP POST (or GET/PUT)
+                                           ▼
+                                 ┌────────────────────┐
+                                 │  YOUR SERVER /     │
+                                 │  YOUR WEBHOOK URL  │
+                                 └────────────────────┘
+```
+
+**Behind the scenes:**
+1. The assistant completes the call.
+2. QCall takes the full transcript + collected context.
+3. The AI extracts every **Body Parameter** value using strict rules (never invents data, only uses exact words from the user/transcript).
+4. QCall sends an HTTP request (method of your choice) to your configured URL with headers, query parameters, and body.
+5. Your server responds. The response status + body is logged in the QCall delivery history for audit.
+
+---
+
+## 3. Configuring the Webhook in the QCall Dashboard
+
+Open **Dashboard → Assistants → (select your assistant) → Tools → + Add Webhook**. You'll see the following fields:
+
+| Field (UI label) | Description |
+|------------------|-------------|
+| **Webhook URL** | Your public HTTPS endpoint. Must be reachable from the internet. |
+| **Method** | `POST`, `GET`, `PUT`, or `DELETE`. For end-of-call reporting use `POST`. |
+| **Trigger on Call End** | Toggle **ON** to fire AFTER the call ends. OFF = fire DURING the call. |
+| **Enable Trigger** | Master switch — must be **ON** to actually fire the webhook. |
+| **Enable Body** | Toggle **ON** to send a JSON body built from the Body Parameters. |
+| **Headers** | List of `Name` / `Value` pairs. Always include `Content-Type: application/json` and an `Authorization` header for security. |
+| **Query Parameters** | Key/value pairs appended to the URL. |
+| **Body Parameters** | The fields you want QCall to send in the request body. Each parameter has: `Identifier`, `Data Type`, `Required` flag, `Description`, `Value`. |
+
+### Body Parameter fields (each row)
+
+| Field | What to enter |
+|-------|---------------|
+| **Identifier** | The JSON key sent to your webhook (e.g. `first_name`). **Always use lowercase snake_case.** |
+| **Data Type** | `string`, `number`, or `boolean`. |
+| **Required** | Turn ON if this field must be present on your side. |
+| **Description** | Short hint telling the AI what to extract (e.g. "Caller's first name"). Be specific — the AI uses this. |
+| **Value** | Leave blank. QCall will automatically fill this from the call transcript when the call ends. |
+
+---
+
+## 4. Example: Recommended Field Setup
+
+Configure the following Body Parameters inside your webhook tool to receive full caller + order information after each call.
+
+| Identifier | Data Type | Required | Description |
+|------------|-----------|----------|-------------|
+| `first_name` | string | yes | Caller's first name |
+| `last_name` | string | yes | Caller's last name |
+| `phone_number` | string | yes | Caller's phone number in E.164 format |
+| `email_address` | string | no | Caller's email address |
+| `order_id` | string | no | Order ID referenced in the call |
+| `call_date` | string | yes | Date of the call (YYYY-MM-DD) |
+| `call_duration` | number | yes | Total call duration in seconds |
+| `call_cost` | number | no | Cost of the call (in account currency) |
+| `product_name` | string | no | Product name discussed or ordered |
+| `quantity` | number | no | Quantity of product ordered |
+| `order_value` | number | no | Total order value (price × quantity) |
+| `address` | string | no | Delivery address provided by the caller |
+| `pincode` | string | no | Postal / ZIP / pincode |
+| `sentiment_analysis` | string | no | Caller sentiment (Positive / Neutral / Negative) |
+| `call_outcome` | string | yes | Final outcome (Order Placed, Not Interested, Callback Requested, etc.) |
+| `call_summary` | string | yes | Short summary of the conversation |
+| `recording_url` | string | no | URL of the call recording |
+
+**Webhook URL example:** `https://your-domain.com/api/qcall/call-report`
+**Method:** `POST`
+**Trigger on Call End:** ON
+**Enable Trigger:** ON
+**Enable Body:** ON
+
+**Headers:**
+| Name | Value |
+|------|-------|
+| `Content-Type` | `application/json` |
+| `Authorization` | `Bearer YOUR_API_KEY` |
+
+---
+
+## 5. Example: The Payload Your Server Will Receive
+
+When the call ends, QCall sends a request like this to the URL you configured:
+
+**Request**
+```
+POST /api/qcall/call-report HTTP/1.1
+Host: your-domain.com
+Content-Type: application/json
+Authorization: Bearer YOUR_API_KEY
+```
+
+**Body**
+```json
+{
+  "first_name": "Kapil",
+  "last_name": "Karda",
+  "phone_number": "+919876543210",
+  "email_address": "kapil@example.com",
+  "order_id": "ORD-2026-00123",
+  "call_date": "2026-04-24",
+  "call_duration": 184,
+  "call_cost": 0.42,
+  "product_name": "Premium Wireless Earbuds",
+  "quantity": 2,
+  "order_value": 3998,
+  "address": "42, Green Park, New Delhi",
+  "pincode": "110016",
+  "sentiment_analysis": "Positive",
+  "call_outcome": "Order Placed",
+  "call_summary": "Customer confirmed order of 2 premium wireless earbuds for delivery to Green Park. Payment on delivery agreed.",
+  "recording_url": "https://cdn.qcall.ai/recordings/cs_abc123.mp3"
+}
+```
+
+---
+
+## 6. Expected Response from Your Server
+
+Your server should respond with **HTTP 200 or 201** and a JSON body. Non-2xx responses are logged as failures in QCall's delivery history.
+
+**Example response**
+```json
+{
+  "success": true,
+  "message": "Record saved",
+  "record_id": "rec_78910"
+}
+```
+
+- **Timeout:** 10 seconds. If your endpoint does not respond within 10s, the delivery is marked failed.
+- **Retries:** The webhook fires **once** per call. Build your endpoint to be idempotent (use `order_id` or a call-level unique id to dedupe).
+
+---
+
+## 7. Security Recommendations
+
+1. **Use HTTPS only.** Plain HTTP endpoints are accepted but strongly discouraged.
+2. **Protect your endpoint** with a static bearer token / API key passed via the `Authorization` header:
+   ```
+   Authorization: Bearer LONG_RANDOM_SECRET
+   ```
+3. **Validate input** server-side. Do not trust field values blindly — treat them like any user-supplied data.
+4. **Log every request** (request id, timestamp, IP) for auditing.
+
+---
+
+## 8. Content Types Supported
+
+QCall automatically serializes the body based on the `Content-Type` header you set:
+
+| Content-Type | Body Sent As |
+|--------------|--------------|
+| `application/json` *(default, recommended)* | Raw JSON object |
+| `application/x-www-form-urlencoded` | `key1=val1&key2=val2` |
+| `multipart/form-data` | Multipart form, each parameter becomes a form field |
+
+For **GET** / **DELETE** requests, the body is omitted automatically — use **Query Parameters** instead.
+
+---
+
+## 9. Testing Your Integration
+
+1. **Build a test receiver** — either a simple Express server or use [webhook.site](https://webhook.site).
+2. **Use the webhook.site URL** as the Webhook URL in the QCall Dashboard while testing:
+   ```
+   https://webhook.site/<your-unique-id>
+   ```
+3. **Place a test call** through the QCall dashboard or playground.
+4. **End the call** — the webhook should fire within a few seconds.
+5. **Verify** the received payload matches the Body Parameters you configured.
+
+### Minimal Node.js receiver example
+
+```js
+const express = require("express");
+const app = express();
+app.use(express.json());
+
+app.post("/api/qcall/call-report", (req, res) => {
+  console.log("QCall webhook received:", req.body);
+
+  // Validate auth
+  const auth = req.headers.authorization;
+  if (auth !== "Bearer YOUR_API_KEY") {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  // TODO: Save to your DB / CRM / spreadsheet
+  return res.status(200).json({ success: true });
+});
+
+app.listen(3000, () => console.log("Listening on :3000"));
+```
+
+---
+
+## 10. Frequently Asked Questions
+
+**Q. Can I receive multiple webhooks per call?**
+Yes. Add multiple webhook tools under the same assistant. Each one has its own URL, method, and parameter set.
+
+**Q. What happens to missing values?**
+The AI will set the field to an empty string `""` rather than invent data. Your server should handle empty strings gracefully.
+
+**Q. Can I add custom fields?**
+Yes. Any Body Parameter you add with a clear Description will be extracted by the AI. Always use lowercase snake_case identifiers.
+
+**Q. Can I filter which calls trigger the webhook?**
+Not natively — every call for that assistant fires the webhook. Filter on your side using `call_outcome` or `sentiment_analysis`.
+
+**Q. Where can I see webhook delivery history?**
+Contact your QCall account manager for access to the delivery log for your workspace.
+
+---
+
+## 11. Quick Checklist Before Going Live
+
+- [ ] Webhook URL is HTTPS and reachable from the public internet.
+- [ ] **Trigger on Call End** and **Enable Trigger** are both ON.
+- [ ] `Content-Type` header matches how you parse the body.
+- [ ] Authorization header is set and validated on your server.
+- [ ] Endpoint responds within 10 seconds.
+- [ ] Endpoint is idempotent (safe to receive same call twice).
+- [ ] Every Body Parameter identifier uses lowercase snake_case.
+- [ ] Tested end-to-end with a real call.
+
+---
+
+## 12. Support
+
+For issues, error codes, or custom integrations, reach out to your QCall support contact with:
+- Assistant name
+- Approximate call timestamp (with timezone)
+- Your server's response code + body
+
+We will match it against QCall's delivery log for debugging.
+ 
