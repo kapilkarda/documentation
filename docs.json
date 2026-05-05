@@ -101,18 +101,18 @@
                   "general/integrations/hubspot",
                   "general/integrations/salesforce",
                   "general/integrations/smtp",
-                  {
-                    "group": "WhatsApp",
-                    "pages": [
-                      "general/integrations/whatsapp",
-                      "general/integrations/whatsappBusinessApiSetup",
-                      "general/integrations/whatsappAccessToken"
-                    ]
-                  },
                   "general/integrations/gohighlevel",
                   "general/integrations/elevenLabs",
                   "general/integrations/cartesia",
                   "general/integrations/zoho",
+                  {
+                    "group": "Zeplo",
+                    "pages": [
+                      "general/integrations/zeplo",
+                      "general/integrations/zeploSetup",
+                      "general/integrations/zeploTemplates"
+                    ]
+                  },
                   "general/integrations/rime",
                   "general/integrations/neuphonic",
                   "general/integrations/lmnt"

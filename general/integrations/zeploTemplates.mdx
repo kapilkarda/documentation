@@ -1,0 +1,173 @@
+---
+title: Zeplo Template Configuration
+description: "Learn how to configure Zeplo WhatsApp templates, parameter hints, and send messages from QCall AI assistants."
+---
+
+## Zeplo Template Configuration in QCall AI
+
+Once your Zeplo credentials are configured (see [Zeplo Setup Guide](/general/integrations/zeploSetup)), you can use WhatsApp templates in your QCall AI assistants to send automated messages.
+
+---
+
+### How Templates Work
+
+Zeplo templates are WhatsApp Business API message templates that contain placeholders like `{{1}}`, `{{2}}`, etc. When QCall AI sends a message, these placeholders are filled with real values extracted from the call conversation.
+
+A typical template structure:
+
+| Section | Example | Placeholders |
+|---|---|---|
+| **Header** | `Order #{{1}} Update` | `{{1}}` = order number |
+| **Body** | `Hi {{1}}, your order has been shipped! Tracking: {{2}}. Delivery: {{3}}.` | `{{1}}` = name, `{{2}}` = tracking, `{{3}}` = date |
+| **Button** | URL button → `Track Order` → `https://track.com/{{1}}` | `{{1}}` = tracking ID |
+
+---
+
+### Step 1: Enable Zeplo in a Send Message Action
+
+1. Navigate to **Assistants** and create or edit an assistant.
+2. In the **Action** section, find or add a **Send Message** action.
+3. Scroll to the Zeplo section and check **Zeplo (WhatsApp)**.
+
+<Note>
+If you see a **"Configure Zeplo"** link instead of the template selector, it means your Zeplo credentials are not yet set up. Click the link to go to the Zeplo configuration page, or follow the [Zeplo Setup Guide](/general/integrations/zeploSetup).
+</Note>
+
+---
+
+### Step 2: Select a Template
+
+1. From the **Zeplo Template** dropdown, select one of your approved templates.
+2. The templates are fetched directly from your Zeplo account.
+3. Only **APPROVED** templates will appear in the list.
+
+---
+
+### Step 3: Fill in Parameter Hints
+
+After selecting a template, QCall AI will automatically parse all placeholders and display **Parameter Hints** fields. These hints tell the AI what each placeholder represents so it can extract the correct value from the conversation.
+
+For example, if your template body is:
+```
+Hi {{1}}, your order {{2}} has been shipped!
+```
+
+You would fill in:
+- **Body {"{{1}}"}** hint: `Customer's full name`
+- **Body {"{{2}}"}** hint: `Order number or ID`
+
+<Frame>
+  <img
+    src="/images/zeplo/02-templates-full.png"
+    style={{ borderRadius: "0.5rem" }}
+  />
+</Frame>
+
+Parameters are grouped by section:
+
+| Section | Description |
+|---|---|
+| **Header parameters** | Placeholders in the message header |
+| **Body parameters** | Placeholders in the main message body |
+| **Button (URL) parameters** | Placeholders in URL button destinations |
+
+<Warning>
+**All parameter hints must be filled in.** Leaving a hint empty will cause a validation error and the message will not be sent. This prevents Meta API error #132000.
+</Warning>
+
+---
+
+### Step 4: Add a Condition Text
+
+The **Condition Text** field describes *when* the WhatsApp message should be sent. This text helps the AI decide the right moment to trigger the message.
+
+Examples:
+- `"Send order confirmation after the customer places an order"`
+- `"Send appointment reminder with the scheduled date"`
+- `"Send OTP code for verification"`
+
+---
+
+### Step 5: Configure Send Timing
+
+Two checkboxes control when the message is sent:
+
+| Option | Description |
+|---|---|
+| **Send Zeplo after the call ends** | Message is sent when the call concludes naturally |
+| **Send Zeplo if call is not answered** | Message is sent when the recipient doesn't pick up |
+
+Both options can be enabled simultaneously.
+
+---
+
+### Step 6: Test the Template
+
+Before deploying, test your template configuration:
+
+1. Click the **Test Zeplo** button (visible when Zeplo is configured).
+2. In the test modal:
+   - Enter a **phone number** (with country code)
+   - Select a **template**
+   - Fill in the **parameter values** for each placeholder
+3. Click **Send Test**.
+4. Check if the WhatsApp message was delivered successfully.
+
+---
+
+### Authentication (OTP) Templates
+
+Authentication templates have special handling. Meta requires the **same OTP value** to appear in both the body and button parameters. QCall AI handles this automatically:
+
+1. When you select an **Authentication** category template, you'll see a warning banner.
+2. You only need to provide **one hint** for the OTP value.
+3. QCall AI will automatically replicate the OTP to all body and button placeholders at send time.
+
+The test modal also simplifies OTP testing — enter the code once, and it's applied to all slots.
+
+---
+
+### Template Categories
+
+| Category | Description | Use Case |
+|---|---|---|
+| **Marketing** | Promotional content | Discounts, offers, announcements |
+| **Utility** | Transactional updates | Order status, account updates, alerts |
+| **Authentication** | Security verification | OTP codes, login verification |
+
+---
+
+### Tracking Zeplo Message Status
+
+After sending messages through QCall AI campaigns, you can track the Zeplo delivery status in multiple places:
+
+- **Campaign Details** — Shows `is_zeplo_sent` status per contact
+- **Call Logs** — Displays whether a WhatsApp message was sent for each call
+- **Call Playground** — Shows Zeplo status in the history view
+
+---
+
+### Troubleshooting
+
+| Issue | Solution |
+|---|---|
+| Templates not loading | Verify Zeplo credentials are correct and the channel is connected |
+| "Configure Zeplo" link shown | Go to Integrations → Zeplo and enter your API Key, Secret, and Channel ID |
+| Meta error #132000 | Ensure all parameter hints are filled in the send message action |
+| Test message not delivered | Check that the phone number includes the country code and the template is APPROVED |
+| OTP not working for auth templates | Verify the template category is set to "AUTHENTICATION" in Zeplo |
+
+---
+
+### API Endpoints Used
+
+QCall AI uses the following backend endpoints to communicate with Zeplo:
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/zeplo/zeplo-config` | GET | Fetch current Zeplo configuration |
+| `/zeplo/zeplo-config` | POST | Create new Zeplo configuration |
+| `/zeplo/zeplo-update` | PUT | Update existing configuration |
+| `/zeplo/zeplo-delete` | DELETE | Remove Zeplo configuration |
+| `/zeplo/template-list` | GET | Fetch approved WhatsApp templates |
+| `/zeplo/test-zeplo-config` | POST | Send a test message |
