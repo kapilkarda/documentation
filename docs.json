@@ -102,9 +102,6 @@
                   "general/integrations/salesforce",
                   "general/integrations/smtp",
                   "general/integrations/gohighlevel",
-                  "general/integrations/elevenLabs",
-                  "general/integrations/cartesia",
-                  "general/integrations/zoho",
                   {
                     "group": "Zeplo",
                     "pages": [
@@ -112,10 +109,7 @@
                       "general/integrations/zeploSetup",
                       "general/integrations/zeploTemplates"
                     ]
-                  },
-                  "general/integrations/rime",
-                  "general/integrations/neuphonic",
-                  "general/integrations/lmnt"
+                  }
                 ]
               },
               "general/profileMenu/billing",

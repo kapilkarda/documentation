@@ -1114,8 +1114,8 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "enum": ["scheduleMeeting"],
-                  "description": "Type of action (currently only scheduleMeeting is supported)"
+                  "enum": ["scheduleMeeting", "sendMessage"],
+                  "description": "Type of action: scheduleMeeting or sendMessage"
                 },
                 "meetingType": {
                   "type": "string",
@@ -1157,9 +1157,73 @@
                 "bookingDays": {
                   "type": "string",
                   "description": "Comma-separated list of available booking days"
+                },
+                "sms": {
+                  "type": "object",
+                  "description": "SMS configuration for sendMessage action",
+                  "properties": {
+                    "is_sms": { "type": "boolean", "description": "Enable SMS messaging" },
+                    "description": { "type": "string", "description": "Condition text describing when to send the SMS" },
+                    "content": { "type": "string", "description": "SMS message content" },
+                    "end_call_sms": { "type": "boolean", "description": "Send SMS after the call ends" },
+                    "end_call_sms_not_answered": { "type": "boolean", "description": "Send SMS if call is not answered" }
+                  }
+                },
+                "whatsapp": {
+                  "type": "object",
+                  "description": "WhatsApp (Meta) configuration for sendMessage action (legacy, replaced by Zeplo)",
+                  "properties": {
+                    "is_whatsapp": { "type": "boolean", "description": "Enable WhatsApp messaging" },
+                    "description": { "type": "string", "description": "Condition text describing when to send the message" },
+                    "content": { "type": "object", "description": "WhatsApp template object" },
+                    "end_call_sms": { "type": "boolean", "description": "Send after call ends" },
+                    "end_call_sms_not_answered": { "type": "boolean", "description": "Send if call not answered" }
+                  }
+                },
+                "zeplo": {
+                  "type": "object",
+                  "description": "Zeplo (WhatsApp) configuration for sendMessage action",
+                  "properties": {
+                    "is_zeplo": { "type": "boolean", "description": "Enable Zeplo WhatsApp messaging" },
+                    "description": { "type": "string", "description": "Condition text describing when to send the WhatsApp message" },
+                    "content": {
+                      "type": "object",
+                      "description": "Zeplo template content and parameter configuration",
+                      "properties": {
+                        "templateName": { "type": "string", "description": "Name of the approved WhatsApp template in Zeplo" },
+                        "language": { "type": "string", "description": "Template language code (e.g. en_US)", "default": "en_US" },
+                        "category": { "type": "string", "description": "Template category: MARKETING, UTILITY, or AUTHENTICATION", "enum": ["MARKETING", "UTILITY", "AUTHENTICATION"] },
+                        "parameter_hints": {
+                          "type": "array",
+                          "description": "Array of hint strings aligned 1-to-1 with parameter_slots. Tells the AI what value to extract for each placeholder.",
+                          "items": { "type": "string" }
+                        },
+                        "parameter_slots": {
+                          "type": "array",
+                          "description": "Array of slot objects describing each placeholder's position in the template",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "section": { "type": "string", "description": "Template section: header, body, or button", "enum": ["header", "body", "button"] },
+                              "index": { "type": "integer", "description": "For header/body: the placeholder number (1-based). For button: button position (0-based)" },
+                              "sub_index": { "type": "integer", "description": "For button only: the placeholder number inside the button URL (1-based)" },
+                              "label": { "type": "string", "description": "Human-readable label (e.g. 'Body {{1}}' or 'Button 0 (Track Order) {{1}}')" }
+                            }
+                          }
+                        },
+                        "components": {
+                          "type": "array",
+                          "description": "Always empty array [] — built at send time from parameter values",
+                          "items": {}
+                        }
+                      }
+                    },
+                    "end_call_sms": { "type": "boolean", "description": "Send Zeplo message after the call ends" },
+                    "end_call_sms_not_answered": { "type": "boolean", "description": "Send Zeplo message if call is not answered" }
+                  }
                 }
               },
-              "required": ["type", "meetingType", "startDate", "startTime", "endTime", "bookingDays"]
+              "required": ["type"]
             }
           },
           "goal": {
@@ -1304,6 +1368,187 @@
           "call_outcome_prompt": {
             "description": "Call outcome prompt",
             "type": "string"
+          },
+          "generate_call_flow": {
+            "description": "Auto-generate call flow from the script",
+            "type": "boolean"
+          },
+          "gender": {
+            "description": "Voice gender: male or female",
+            "type": "string",
+            "enum": ["male", "female"]
+          },
+          "is_start_speech_update": {
+            "description": "Whether the start speech has been updated from default",
+            "type": "boolean"
+          },
+          "company_website": {
+            "description": "Company website URL",
+            "type": "string"
+          },
+          "eleven_lab_modal": {
+            "description": "ElevenLabs model ID when using ElevenLabs voices",
+            "type": "string"
+          },
+          "voice_data": {
+            "description": "Full voice object of the selected voice. Required when ai_modal is 'qmodel'.",
+            "type": "object",
+            "properties": {
+              "voice_id": {
+                "type": "string",
+                "description": "Unique voice identifier"
+              },
+              "name": {
+                "type": "string",
+                "description": "Display name of the voice"
+              },
+              "category": {
+                "type": "string",
+                "description": "Voice category (e.g. professional, conversational)"
+              },
+              "labels": {
+                "type": "object",
+                "description": "Voice metadata labels",
+                "properties": {
+                  "language": { "type": "string", "description": "Language code (e.g. hi, en)" },
+                  "language_name": { "type": "string", "description": "Language name (e.g. Hindi, English)" },
+                  "gender": { "type": "string", "description": "Voice gender" },
+                  "accent": { "type": "string", "description": "Voice accent (e.g. Indian, US)" }
+                }
+              },
+              "preview_url": {
+                "type": "string",
+                "description": "URL to preview audio sample of the voice"
+              },
+              "reference_text": {
+                "type": "string",
+                "description": "Reference text used for the voice sample"
+              },
+              "is_native": {
+                "type": "boolean",
+                "description": "Whether this is a native voice"
+              },
+              "categories": {
+                "type": "array",
+                "description": "Usage categories for this voice",
+                "items": { "type": "string" }
+              },
+              "source": {
+                "type": "string",
+                "description": "Voice source (e.g. professional_cloning, community)"
+              },
+              "id": {
+                "type": "string",
+                "description": "Voice ID (same as voice_id)"
+              },
+              "displayname": {
+                "type": "string",
+                "description": "Display name of the voice"
+              },
+              "ai_modal": {
+                "type": "string",
+                "description": "AI model associated with this voice"
+              },
+              "language": {
+                "type": "string",
+                "description": "Language code"
+              },
+              "language_name": {
+                "type": "string",
+                "description": "Language display name"
+              },
+              "similarity": {
+                "type": "number",
+                "description": "Voice similarity score (0-100)"
+              },
+              "stability": {
+                "type": "number",
+                "description": "Voice stability score (0-100)"
+              }
+            }
+          },
+          "stability": {
+            "description": "Voice stability (0.0 to 1.0). Controls how consistent the voice sounds.",
+            "type": "number"
+          },
+          "similarity": {
+            "description": "Voice similarity boost (0.0 to 1.0). Controls how closely the output matches the original voice.",
+            "type": "number"
+          },
+          "style_exaggeration": {
+            "description": "Style exaggeration (0.0 to 1.0). Controls how expressive the voice is.",
+            "type": "number"
+          },
+          "speaker_boost": {
+            "description": "Enable speaker boost for clearer voice output",
+            "type": "boolean"
+          },
+          "safety_fallback_delay": {
+            "description": "Fallback delay in milliseconds when AI doesn't respond in time",
+            "type": "number"
+          },
+          "enable_delay": {
+            "description": "Enable response delay for more natural conversation flow",
+            "type": "boolean"
+          },
+          "is_call_flow": {
+            "description": "Whether a custom call flow is configured",
+            "type": "boolean"
+          },
+          "call_flow": {
+            "description": "Custom call flow configuration object",
+            "type": "object"
+          },
+          "background_type": {
+            "description": "Background sound type (e.g. office, cafe, street)",
+            "type": "string"
+          },
+          "background_volume": {
+            "description": "Background sound volume level (1-10)",
+            "type": "number"
+          },
+          "end_call_message": {
+            "description": "Message spoken by the assistant at the end of the call",
+            "type": "string"
+          },
+          "wait_max_interval": {
+            "description": "Maximum wait interval in milliseconds before the assistant speaks again",
+            "type": "number"
+          },
+          "set_transcription_start_time": {
+            "description": "Transcription start time offset in milliseconds",
+            "type": "number"
+          },
+          "widget_config": {
+            "description": "Widget configuration for embedding the assistant on a website",
+            "type": "object",
+            "properties": {
+              "mode": {
+                "type": "string",
+                "description": "Widget display mode (e.g. floating, embedded)",
+                "enum": ["floating", "embedded"]
+              },
+              "api_key": {
+                "type": "string",
+                "description": "API key for the widget"
+              },
+              "enabled": {
+                "type": "boolean",
+                "description": "Enable or disable the widget"
+              },
+              "uiStyle": {
+                "type": "string",
+                "description": "Widget UI style (e.g. default, minimal)"
+              },
+              "position": {
+                "type": "string",
+                "description": "Widget position on the page (e.g. bottom-right, bottom-left)"
+              },
+              "containerId": {
+                "type": "string",
+                "description": "DOM container ID where the widget renders"
+              }
+            }
           }
         }
       },

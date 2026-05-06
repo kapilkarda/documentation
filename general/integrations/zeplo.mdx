@@ -41,9 +41,26 @@ QCall AI uses three credentials from your Zeplo account:
 When configured, QCall AI can:
 
 1. **Fetch templates** — Automatically load your approved WhatsApp templates from Zeplo
-2. **Extract parameters** — Parse template placeholders (`{{1}}`, `{{2}}`, etc.) and present them for AI hints
+2. **Extract parameters** — Parse template placeholders (`{"{{1}}"}`, `{"{{2}}"}`, etc.) and present them for AI hints
 3. **Send messages** — Trigger WhatsApp messages at the end of calls or when calls go unanswered
 4. **Handle OTP** — Automatically replicate OTP values across body and button for authentication templates
+
+## Required Keys for Assistant Setup
+
+When creating an assistant with a **Send Message** action, you need these Zeplo fields:
+
+| Key | Required | Description |
+|---|---|---|
+| **API Key** | Yes | From Zeplo → Settings → API Key Setting. Used to authenticate all API requests. |
+| **API Secret** | Yes (create) | Created alongside the API Key. Only shown once — save it securely. Not required when editing existing config. |
+| **Channel ID** | Yes | UUID identifying your WhatsApp channel. From Zeplo → Settings → Channel Setting. |
+| **Zeplo Template** | Yes | An approved WhatsApp template selected in the Send Message action. |
+| **Parameter Hints** | Yes | One hint per template placeholder, telling the AI what value to extract. |
+| **Condition Text** | Yes | Describes when to trigger the WhatsApp message (e.g. "after order placed"). |
+
+<Note>
+The **API Key**, **API Secret**, and **Channel ID** are configured once in **Integrations → Zeplo**. The **Template**, **Parameter Hints**, and **Condition Text** are configured per assistant Send Message action.
+</Note>
 
 ## Setup Overview
 

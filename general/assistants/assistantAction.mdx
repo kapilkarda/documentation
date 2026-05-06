@@ -19,9 +19,24 @@ The agent can send an SMS to the user when certain conditions are met<br/>
 
 Just enter the SMS content and set the conditions. You can choose to send it after the call ends.
 
-#### WhatsApp:
+#### WhatsApp (Zeplo):
 
-Select a WhatsApp template ( that you have created at SMTP through the integration option. ). Specify when the message should be sent, and choose to send it after the call ends if you prefer.
+QCall AI uses **Zeplo** to send WhatsApp messages. Before using this feature, make sure you have configured your Zeplo credentials in **Integrations → Zeplo** (see [Zeplo Setup Guide](/general/integrations/zeploSetup)).
+
+1. Check the **Zeplo (WhatsApp)** checkbox in the Send Message action.
+2. Select a **Zeplo Template** from the dropdown (only approved templates are shown).
+3. Fill in **Parameter Hints** — describe what each placeholder represents so the AI can extract the correct value from the conversation.
+4. Enter a **Condition Text** describing when the message should be sent (e.g. "Send order confirmation after customer places order").
+5. Optionally check:
+   - **Send Zeplo after the call ends** — sends the message when the call concludes.
+   - **Send Zeplo if call is not answered** — sends the message when the recipient doesn't pick up.
+6. Click **Test Zeplo** to send a test message before saving.
+
+<Note>
+All parameter hints are required. Empty hints will cause a validation error and prevent the message from being sent.
+</Note>
+
+For detailed Zeplo template configuration, see [Zeplo Template Configuration](/general/integrations/zeploTemplates).
 
 ### Send Email
 

@@ -17,44 +17,38 @@ A typical template structure:
 
 | Section | Example | Placeholders |
 |---|---|---|
-| **Header** | `Order #{{1}} Update` | `{{1}}` = order number |
-| **Body** | `Hi {{1}}, your order has been shipped! Tracking: {{2}}. Delivery: {{3}}.` | `{{1}}` = name, `{{2}}` = tracking, `{{3}}` = date |
-| **Button** | URL button → `Track Order` → `https://track.com/{{1}}` | `{{1}}` = tracking ID |
+| **Header** | `Order #{"{{1}}"}` Update | `{"{{1}}"}` = order number |
+| **Body** | `Hi {"{{1}}"}, your order has been shipped! Tracking: {"{{2}}"}. Delivery: {"{{3}}"}.` | `{"{{1}}"}` = name, `{"{{2}}"}` = tracking, `{"{{3}}"}` = date |
+| **Button** | URL button → Track Order → `https://track.com/{"{{1}}"}` | `{"{{1}}"}` = tracking ID |
 
 ---
 
-### Step 1: Enable Zeplo in a Send Message Action
+### Create an Assistant with Zeplo
 
-1. Navigate to **Assistants** and create or edit an assistant.
-2. In the **Action** section, find or add a **Send Message** action.
-3. Scroll to the Zeplo section and check **Zeplo (WhatsApp)**.
+To use Zeplo WhatsApp messaging in your AI assistant, you need to add a **Send Message** action and configure the Zeplo card. Below are all the steps and required fields.
+
+#### Step 1: Create or Edit an Assistant
+
+1. Navigate to **Assistants** from the left sidebar menu.
+2. Click **Create Assistant** to create a new one, or click an existing assistant to edit it.
+3. Fill in the basic assistant details (name, prompt, voice, etc.).
+4. Scroll down to the **Actions** section.
+
+#### Step 2: Add a Send Message Action
+
+1. Click **Add Action** and select **Send Message**.
+2. A drawer opens with three messaging options:
+   - **SMS** — Send an SMS message
+   - **Zeplo (WhatsApp)** — Send a WhatsApp message via Zeplo
+   - You must enable at least one option to proceed.
 
 <Note>
 If you see a **"Configure Zeplo"** link instead of the template selector, it means your Zeplo credentials are not yet set up. Click the link to go to the Zeplo configuration page, or follow the [Zeplo Setup Guide](/general/integrations/zeploSetup).
 </Note>
 
----
+#### Step 3: Enable Zeplo (WhatsApp)
 
-### Step 2: Select a Template
-
-1. From the **Zeplo Template** dropdown, select one of your approved templates.
-2. The templates are fetched directly from your Zeplo account.
-3. Only **APPROVED** templates will appear in the list.
-
----
-
-### Step 3: Fill in Parameter Hints
-
-After selecting a template, QCall AI will automatically parse all placeholders and display **Parameter Hints** fields. These hints tell the AI what each placeholder represents so it can extract the correct value from the conversation.
-
-For example, if your template body is:
-```
-Hi {{1}}, your order {{2}} has been shipped!
-```
-
-You would fill in:
-- **Body {"{{1}}"}** hint: `Customer's full name`
-- **Body {"{{2}}"}** hint: `Order number or ID`
+Check the **Zeplo (WhatsApp)** checkbox. This reveals the full Zeplo configuration card with the following required and optional fields:
 
 <Frame>
   <img
@@ -62,6 +56,39 @@ You would fill in:
     style={{ borderRadius: "0.5rem" }}
   />
 </Frame>
+
+---
+
+### Required Fields (Zeplo Card)
+
+| Field | Required | Description |
+|---|---|---|
+| **Zeplo (WhatsApp) checkbox** | Yes | Must be checked to enable Zeplo messaging |
+| **Zeplo Template** | Yes | Select an approved WhatsApp template from the dropdown. Templates are fetched from your connected Zeplo account. Only **APPROVED** templates are shown. |
+| **Parameter Hints** | Yes (if template has placeholders) | A hint for each `{"{{N}}"}` placeholder describing what value the AI should extract. Every hint must be filled. |
+| **Condition Text** | Yes | Describes *when* the WhatsApp message should be sent. This tells the AI the right moment to trigger the message. |
+
+### Optional Fields
+
+| Field | Default | Description |
+|---|---|---|
+| **Send Zeplo after the call ends** | Unchecked | Message is sent when the call concludes naturally |
+| **Send Zeplo if call is not answered** | Unchecked | Message is sent when the recipient doesn't pick up |
+
+---
+
+### Step 4: Fill in Parameter Hints
+
+After selecting a template, QCall AI automatically parses all placeholders and displays **Parameter Hints** input fields. These hints tell the AI what each placeholder represents so it can extract the correct value from the conversation.
+
+For example, if your template body is:
+```
+Hi {"{{1}}"}, your order {"{{2}}"} has been shipped!
+```
+
+You would fill in:
+- **Body {"{{1}}"}** hint: `Customer's full name`
+- **Body {"{{2}}"}** hint: `Order number or ID`
 
 Parameters are grouped by section:
 
@@ -77,7 +104,7 @@ Parameters are grouped by section:
 
 ---
 
-### Step 4: Add a Condition Text
+### Step 5: Add a Condition Text
 
 The **Condition Text** field describes *when* the WhatsApp message should be sent. This text helps the AI decide the right moment to trigger the message.
 
@@ -88,20 +115,18 @@ Examples:
 
 ---
 
-### Step 5: Configure Send Timing
+### Step 6: Configure Send Timing
 
-Two checkboxes control when the message is sent:
+Two checkboxes control when the message is sent. Both can be enabled simultaneously:
 
 | Option | Description |
 |---|---|
 | **Send Zeplo after the call ends** | Message is sent when the call concludes naturally |
 | **Send Zeplo if call is not answered** | Message is sent when the recipient doesn't pick up |
 
-Both options can be enabled simultaneously.
-
 ---
 
-### Step 6: Test the Template
+### Step 7: Test the Template
 
 Before deploying, test your template configuration:
 
@@ -134,6 +159,36 @@ The test modal also simplifies OTP testing — enter the code once, and it's app
 | **Marketing** | Promotional content | Discounts, offers, announcements |
 | **Utility** | Transactional updates | Order status, account updates, alerts |
 | **Authentication** | Security verification | OTP codes, login verification |
+
+---
+
+### Data Saved per Send Message Action
+
+When you save a Send Message action with Zeplo enabled, the following data structure is stored:
+
+| Key | Type | Description |
+|---|---|---|
+| `zeplo.is_zeplo` | boolean | Whether Zeplo messaging is enabled |
+| `zeplo.description` | string | The condition text describing when to send |
+| `zeplo.content.templateName` | string | Name of the selected WhatsApp template |
+| `zeplo.content.language` | string | Template language (e.g. `en_US`) |
+| `zeplo.content.category` | string | Template category: `MARKETING`, `UTILITY`, or `AUTHENTICATION` |
+| `zeplo.content.parameter_hints` | string[] | Array of hint strings, aligned 1-to-1 with parameter_slots |
+| `zeplo.content.parameter_slots` | object[] | Array of slot objects describing each placeholder's position |
+| `zeplo.content.components` | array | Always `[]` — built at send time from parameter values |
+| `zeplo.end_call_sms` | boolean | Send after call ends |
+| `zeplo.end_call_sms_not_answered` | boolean | Send if call not answered |
+
+#### Parameter Slot Object
+
+Each entry in `parameter_slots` has this structure:
+
+| Key | Type | Description |
+|---|---|---|
+| `section` | string | `"header"`, `"body"`, or `"button"` |
+| `index` | number | For header/body: the `{"{{N}}"}` number (1-based). For button: the button's position (0-based) |
+| `sub_index` | number | For button only: the `{"{{N}}"}` number inside the button URL |
+| `label` | string | Human-readable label, e.g. `Body {"{{1}}"}` or `Button 0 (Track Order) {"{{1}}"}` |
 
 ---
 
