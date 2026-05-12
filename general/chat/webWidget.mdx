@@ -1,0 +1,101 @@
+---
+title: Web Chat Widget
+description: "This page describes how to embed and configure the QCall AI chat widget on your website"
+icon: "globe"
+---
+
+## Web Chat Widget
+
+QCall AI provides a customizable chat widget that you can embed on your website to engage visitors in real-time AI-powered conversations. The widget connects directly to your configured assistant, providing instant responses to visitor queries.
+
+## Widget Modes
+
+The chat widget supports two display modes:
+
+| Mode | Description |
+|------|-------------|
+| **Floating** | Displays as a floating chat bubble in the corner of the page. Visitors click to open the chat window. |
+| **Embedded** | Embeds directly into a specific container on your page. The chat is always visible within the defined area. |
+
+## How to Configure
+
+### Step 1: Enable Widget in Assistant Settings
+
+1. Navigate to **Assistant Settings** under Call Platforms
+2. Scroll to the **Widget Configuration** section
+3. Enable the widget and configure the following settings:
+
+| Setting | Description | Options |
+|---------|-------------|---------|
+| **Enabled** | Turn the widget on/off | `true` / `false` |
+| **Mode** | Display mode | `floating` / `embedded` |
+| **Position** | Widget position (floating mode only) | `bottom-right` / `bottom-left` |
+| **UI Style** | Widget appearance style | `default` / `minimal` |
+| **API Key** | API key for authentication | Auto-generated |
+| **Container ID** | DOM container ID (embedded mode) | Any valid HTML ID |
+
+### Step 2: Add Widget Code to Your Website
+
+Add the following script to your website's HTML:
+
+#### Floating Mode
+
+```html
+<script>
+  (function(w, d, s, o) {
+    var js = d.createElement(s);
+    js.src = 'https://widget.qcall.ai/widget.js';
+    js.setAttribute('data-api-key', 'YOUR_API_KEY');
+    js.setAttribute('data-mode', 'floating');
+    js.setAttribute('data-position', 'bottom-right');
+    d.head.appendChild(js);
+  })(window, document, 'script');
+</script>
+```
+
+#### Embedded Mode
+
+```html
+<div id="qcall-chat-container" style="width: 400px; height: 600px;"></div>
+
+<script>
+  (function(w, d, s, o) {
+    var js = d.createElement(s);
+    js.src = 'https://widget.qcall.ai/widget.js';
+    js.setAttribute('data-api-key', 'YOUR_API_KEY');
+    js.setAttribute('data-mode', 'embedded');
+    js.setAttribute('data-container-id', 'qcall-chat-container');
+    d.head.appendChild(js);
+  })(window, document, 'script');
+</script>
+```
+
+## API Configuration (via API)
+
+You can also configure the widget programmatically when creating or updating an assistant:
+
+```json
+{
+  "widget_config": {
+    "enabled": true,
+    "mode": "floating",
+    "api_key": "your-api-key",
+    "uiStyle": "default",
+    "position": "bottom-right",
+    "containerId": null
+  }
+}
+```
+
+## Customization Options
+
+- **Colors**: The widget inherits your assistant's primary color (`#7C53FC` by default)
+- **Welcome Message**: Configure the initial greeting in your assistant's start speech
+- **Language**: The widget supports all languages configured for your assistant
+
+## Best Practices
+
+- Use **floating mode** for general website engagement
+- Use **embedded mode** for dedicated support or contact pages
+- Test the widget on different screen sizes before going live
+- Configure a welcoming start speech for chat interactions

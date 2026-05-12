@@ -1,0 +1,46 @@
+---
+title: SMS Chat
+description: "This page describes how to use SMS chat with QCall AI"
+icon: "smartphone"
+---
+
+## SMS Chat
+
+QCall AI allows you to send and receive SMS messages using the phone numbers configured on your dialers. SMS chat is automatically available once you have a dialer set up with a valid phone number.
+
+## How to Send SMS
+
+There are two ways to send SMS messages:
+
+### 1. During a Call (Action-Based)
+
+You can configure your assistant to send SMS messages during or after a call using the **sendMessage** action.
+
+Follow these steps:
+
+1. Go to **Assistant Settings** under Call Platforms
+2. In the **Actions** section, add a new action of type `sendMessage`
+3. Configure the SMS settings:
+   - **is_sms**: Enable SMS messaging
+   - **description**: Condition text describing when to send the SMS (e.g., "Send SMS when the customer requests a booking confirmation")
+   - **content**: The SMS message content (supports custom variables like `{{first_name}}`)
+   - **end_call_sms**: Send SMS after the call ends
+   - **end_call_sms_not_answered**: Send SMS if the call is not answered
+
+### 2. Bulk SMS via Campaigns
+
+You can send SMS messages to an entire tag list by creating a campaign with SMS actions enabled.
+
+## SMS Best Practices
+
+- Keep messages concise and clear
+- Use custom variables to personalize messages
+- Include a clear call-to-action
+- Respect opt-out requests immediately
+- Check local regulations for SMS marketing compliance
+
+## Limitations
+
+- SMS messages are limited to 160 characters per segment
+- International SMS rates may vary based on your dialer provider
+- SMS delivery is not guaranteed and depends on carrier networks

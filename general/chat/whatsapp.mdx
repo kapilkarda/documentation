@@ -1,0 +1,78 @@
+---
+title: WhatsApp Chat
+description: "This page describes how to use WhatsApp chat with QCall AI via Zeplo"
+icon: "message-square"
+---
+
+## WhatsApp Chat
+
+QCall AI integrates with WhatsApp through **Zeplo**, enabling you to send WhatsApp messages using approved templates. This is perfect for sending booking confirmations, reminders, follow-ups, and notifications.
+
+## Prerequisites
+
+Before using WhatsApp chat, make sure you have:
+
+1. A Zeplo account configured (see [Zeplo Setup](/general/integrations/zeploSetup))
+2. Approved WhatsApp message templates in Zeplo (see [Zeplo Templates](/general/integrations/zeploTemplates))
+3. A WhatsApp Business API account connected to Zeplo
+
+## How to Send WhatsApp Messages
+
+### During a Call (Action-Based)
+
+You can configure your assistant to send WhatsApp messages during or after a call using the **sendMessage** action with Zeplo configuration.
+
+Follow these steps:
+
+1. Go to **Assistant Settings** under Call Platforms
+2. In the **Actions** section, add a new action of type `sendMessage`
+3. Configure the Zeplo settings:
+   - **is_zeplo**: Enable Zeplo WhatsApp messaging
+   - **description**: Condition text describing when to send the message
+   - **content**: Zeplo template configuration:
+     - **templateName**: Name of the approved WhatsApp template
+     - **language**: Template language code (e.g., `en_US`)
+     - **category**: Template category (`MARKETING`, `UTILITY`, or `AUTHENTICATION`)
+     - **parameter_hints**: Array of hint strings for AI to extract values for placeholders
+     - **parameter_slots**: Array of slot objects describing placeholder positions
+   - **end_call_sms**: Send message after the call ends
+   - **end_call_sms_not_answered**: Send if call is not answered
+
+### Example Configuration
+
+```json
+{
+  "type": "sendMessage",
+  "zeplo": {
+    "is_zeplo": true,
+    "description": "Send booking confirmation via WhatsApp after meeting is scheduled",
+    "content": {
+      "templateName": "booking_confirmation",
+      "language": "en_US",
+      "category": "UTILITY",
+      "parameter_hints": ["customer name", "appointment date", "appointment time"],
+      "parameter_slots": [
+        { "section": "body", "index": 1, "label": "Body {{1}}" },
+        { "section": "body", "index": 2, "label": "Body {{2}}" },
+        { "section": "body", "index": 3, "label": "Body {{3}}" }
+      ],
+      "components": []
+    },
+    "end_call_sms": true
+  }
+}
+```
+
+## WhatsApp Template Guidelines
+
+- Templates must be pre-approved by WhatsApp before use
+- Each template has a specific category (Marketing, Utility, Authentication)
+- Templates support dynamic parameters using numbered placeholders (e.g., `{{1}}`, `{{2}}`)
+- Messages outside the 24-hour session window must use approved templates
+
+## Best Practices
+
+- Get your templates approved well in advance
+- Use clear and relevant template names
+- Test templates with sample data before launching campaigns
+- Keep parameter hints descriptive for accurate AI extraction

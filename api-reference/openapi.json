@@ -426,12 +426,12 @@
         }
       }
     },
-    "/segment/list": {
+    "/tag/list": {
       "get": {
-        "description": "Returns all Segments from the system that the user has access to",
+        "description": "Returns all Tags from the system that the user has access to",
         "responses": {
           "200": {
-            "description": "Segment response",
+            "description": "Tag response",
             "content": {
               "application/json": {
                 "schema": {
@@ -456,11 +456,11 @@
         }
       }
     },
-    "/segment/create": {
+    "/tag/create": {
       "post": {
-        "description": "Creates a new segment",
+        "description": "Creates a new tag",
         "requestBody": {
-          "description": "Segment to add",
+          "description": "Tag to add",
           "content": {
             "application/json": {
               "schema": {
@@ -472,7 +472,7 @@
         },
         "responses": {
           "200": {
-            "description": "Segment response",
+            "description": "Tag response",
             "content": {
               "application/json": {
                 "schema": {
@@ -494,9 +494,9 @@
         }
       }
     },
-    "/segment/update?id={id}": {
+    "/tag/update?id={id}": {
       "put": {
-        "description": "Update a segment",
+        "description": "Update a tag",
         "parameters": [
           {
             "name": "id",
@@ -505,11 +505,11 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the segment to update"
+            "description": "The ID of the tag to update"
           }
         ],
         "requestBody": {
-          "description": "Segment to update",
+          "description": "Tag to update",
           "content": {
             "application/json": {
               "schema": {
@@ -521,7 +521,7 @@
         },
         "responses": {
           "200": {
-            "description": "Segment response",
+            "description": "Tag response",
             "content": {
               "application/json": {
                 "schema": {
@@ -543,14 +543,14 @@
         }
       }
     },
-    "/segment/delete?id={id}": {
+    "/tag/delete?id={id}": {
       "delete": {
-        "description": "Deletes a single segment based on the ID supplied",
+        "description": "Deletes a single tag based on the ID supplied",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID of segment to delete",
+            "description": "ID of tag to delete",
             "required": true,
             "schema": {
               "type": "string"
@@ -559,7 +559,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Segment deleted",
+            "description": "Tag deleted",
             "content": {}
           },
           "400": {
@@ -575,9 +575,9 @@
         }
       }
     },
-    "/segment/contact/list?id={id}": {
+    "/tag/contact/list?id={id}": {
       "post": {
-        "description": "Returns all segment's contacts from the system that the user has access to",
+        "description": "Returns all tag's contacts from the system that the user has access to",
         "parameters": [
           {
             "name": "id",
@@ -586,12 +586,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the segment to get contacts"
+            "description": "The ID of the tag to get contacts"
           }
         ],
         "responses": {
           "200": {
-            "description": "Segment contacts response",
+            "description": "Tag contacts response",
             "content": {
               "application/json": {
                 "schema": {
@@ -616,9 +616,9 @@
         }
       }
     },
-    "/segment/contact/bulk-upload?id={id}": {
+    "/tag/contact/bulk-upload?id={id}": {
       "post": {
-        "description": "Bulk upload segment's contacts",
+        "description": "Bulk upload tag's contacts",
         "parameters": [
           {
             "name": "id",
@@ -627,7 +627,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the segment to get contacts"
+            "description": "The ID of the tag to get contacts"
           }
         ],
         "requestBody": {
@@ -678,7 +678,7 @@
         }
       }
     },
-    "/segment/contact/create?id={id}": {
+    "/tag/contact/create?id={id}": {
       "post": {
         "description": "Creates a new Contact",
         "parameters": [
@@ -689,7 +689,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the Segment to create contact"
+            "description": "The ID of the Tag to create contact"
           }
         ],
         "requestBody": {
@@ -733,9 +733,9 @@
         }
       }
     },
-    "/segment/contact/update?id={id}": {
+    "/tag/contact/update?id={id}": {
       "put": {
-        "description": "Update Segment's Contact",
+        "description": "Update Tag's Contact",
         "parameters": [
           {
             "name": "id",
@@ -744,7 +744,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the segment's contact to update contact"
+            "description": "The ID of the tag's contact to update contact"
           }
         ],
         "requestBody": {
@@ -760,7 +760,7 @@
         },
         "responses": {
           "200": {
-            "description": "Update segment's contact response",
+            "description": "Update tag's contact response",
             "content": {
               "application/json": {
                 "schema": {
@@ -788,14 +788,14 @@
         }
       }
     },
-    "/segment/contact/delete?id={id}": {
+    "/tag/contact/delete?id={id}": {
       "delete": {
-        "description": "Delete a single Segment's contact based on the ID supplied",
+        "description": "Delete a single Tag's contact based on the ID supplied",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID of segment's contact to delete",
+            "description": "ID of tag's contact to delete",
             "required": true,
             "schema": {
               "type": "string"

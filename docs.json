@@ -34,14 +34,13 @@
               "general/contacts/contacts",
               "general/contacts/companies",
               {
-                "group": "Segments",
+                "group": "Tags",
                 "pages": [
-                  "general/contacts/segmentList/introduction",
-                  "general/contacts/segmentList/addContacts",
-                  "general/contacts/segmentList/modifyContacts"
+                  "general/contacts/tagList/introduction",
+                  "general/contacts/tagList/addContacts",
+                  "general/contacts/tagList/modifyContacts"
                 ]
-              },
-              "general/contacts/deals"
+              }
             ]
           },
           {
@@ -250,17 +249,17 @@
             ]
           },
           {
-            "group": "Segments",
+            "group": "Tags",
             "pages": [
-              "api-reference/segments/get",
-              "api-reference/segments/create",
-              "api-reference/segments/update",
-              "api-reference/segments/delete",
-              "api-reference/segments/createAudience",
-              "api-reference/segments/audienceList",
-              "api-reference/segments/updateAudience",
-              "api-reference/segments/deleteAudience",
-              "api-reference/segments/bulkUpload"
+              "api-reference/tags/get",
+              "api-reference/tags/create",
+              "api-reference/tags/update",
+              "api-reference/tags/delete",
+              "api-reference/tags/createAudience",
+              "api-reference/tags/audienceList",
+              "api-reference/tags/updateAudience",
+              "api-reference/tags/deleteAudience",
+              "api-reference/tags/bulkUpload"
             ]
           },
           {
