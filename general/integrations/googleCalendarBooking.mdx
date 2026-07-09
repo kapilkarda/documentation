@@ -1,0 +1,113 @@
+---
+title: Google Calendar Booking
+description: "This page describes everything about Google Calendar Booking"
+---
+
+## Google Calendar Booking
+
+Let your QCall assistant book appointments straight into your Google Calendar while it's on a call. It checks your real availability, offers only your open times, and creates the booking — and your customer automatically gets a calendar invite by email.
+
+Great for test drives, consultations, demos, service visits, callbacks, and any appointment you want your AI assistant to schedule for you.
+
+**What you'll need**
+- A QCall account with an assistant.
+- A Google account with the calendar you want to book into.
+
+Setup takes about 2 minutes and has two parts: **connect your Google Calendar**, then **turn on booking for an assistant**.
+
+---
+
+## Step 1 — Connect your Google Calendar
+
+1. In the QCall dashboard, open **Integrations** from the left menu.
+2. Find the **Google Calendar** card and click **Connect**.
+3. A Google window opens. **Sign in** with the Google account that has your calendar.
+4. Click **Allow** to give QCall permission to see your availability and add events.
+5. You'll be brought back to QCall and the Google Calendar card will show **Connected**. ✅
+
+> Tip: connect the account whose calendar should hold the appointments (for example, your sales or service calendar).
+
+---
+
+## Step 2 — Turn on booking for an assistant
+
+1. Open the assistant you want to handle bookings (or create a new one).
+2. Go to the **Tools** section and open **Real‑Time Booking**.
+3. Select the **Google Calendar** tab.
+4. Fill in your booking rules:
+
+   | Setting | What it means |
+   |--------|----------------|
+   | **Calendar** | Choose which of your calendars to book into. |
+   | **Slot duration** | How long each appointment is — 15, 30, 45 or 60 minutes. |
+   | **Working hours (start / end)** | The daily window you accept bookings, e.g. 9:00 AM to 4:00 PM. |
+   | **Days** | The days of the week you're open, e.g. Monday to Thursday. |
+
+5. Set when bookings can start:
+   - **Book after (days)** — the earliest a customer can book. For example, set it to **1** so customers can only book from **tomorrow** onward.
+   - **Timezone** — the timezone your times are in.
+6. Add a short note for **when to offer booking** (e.g. "when the caller wants to schedule a test drive").
+7. Click **Save**, then save the assistant.
+
+That's it — your assistant can now book appointments. 🎉
+
+---
+
+## Step 3 — Try it
+
+Start a test call (or use the Playground) and say something like *"Can you book me an appointment?"*
+
+Your assistant will:
+- Ask which day and time you'd like.
+- Read back your **actual free times** for that day.
+- Confirm your choice and create the appointment on your Google Calendar.
+
+Open Google Calendar and you'll see the new event.
+
+---
+
+## What your customer receives
+
+When the assistant books an appointment, your customer is added to the event and **Google emails them an invitation** automatically — with the date, time, and an "Add to calendar" button. No extra setup needed.
+
+> Testing note: if you book using the **same** Google account that owns the calendar, you won't get an email — Google doesn't send you an invite to your own event. Use a **different** email (like a real customer would) to see the invitation.
+
+---
+
+## Good to know
+
+Your assistant always follows the rules you set:
+
+- ✅ It only offers your **open days and hours**. If someone asks for a day you're closed, it says you're only open on your selected days.
+- ✅ It only offers times that are **actually free** — anything already on your calendar is skipped.
+- ✅ If a customer asks for a specific time, it books that time **only if it's available**; otherwise it suggests the closest open times.
+- ✅ It won't book **earlier than your "Book after" setting** or **outside your working hours**.
+
+---
+
+## Frequently asked questions
+
+**Do I need to set anything up in Google?**
+No. Just click **Connect** and approve — QCall handles the rest.
+
+**Which calendar gets the bookings?**
+The one you pick in the **Calendar** dropdown when setting up booking. Choose "primary" for your main calendar.
+
+**Can I limit bookings to certain days and hours?**
+Yes — set your **Days** and **Working hours** in the Google Calendar booking tab. Everything else is treated as closed.
+
+**Can customers book for today?**
+Only if your **Book after** setting allows it. Set it to 0 to allow same‑day booking, or 1+ to require advance notice.
+
+**My customer didn't get an email.**
+You probably tested with the calendar owner's own email. Try booking with a different email address.
+
+**I got a "not connected" message on a call.**
+Your Google Calendar connection may have been removed or expired. Reconnect it under **Integrations**.
+
+**How do I disconnect?**
+Go to **Integrations**, open the Google Calendar card, and click the delete (trash) icon.
+
+---
+
+Need help? Contact QCall support and we'll get you set up.

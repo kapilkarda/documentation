@@ -67,7 +67,8 @@
                 "group": "Dialers",
                 "pages": [
                   "general/dialer/introduction",
-                  "general/dialer/integrateDialer"
+                  "general/dialer/integrateDialer",
+                  "general/dialer/vobizSipIntegration"
                 ]
               },
               {
@@ -101,6 +102,7 @@
                   "general/integrations/salesforce",
                   "general/integrations/smtp",
                   "general/integrations/gohighlevel",
+                  "general/integrations/googleCalendarBooking",
                   {
                     "group": "Zeplo",
                     "pages": [
