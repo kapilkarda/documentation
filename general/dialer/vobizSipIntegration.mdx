@@ -17,7 +17,7 @@ It has two halves:
   loop-back on Vobiz.
 
 > **You need one thing from each side.** Vobiz gives you a *SIP domain + username + password + phone
-> number*. QCall gives you back a *LiveKit SIP URI* that Vobiz must forward inbound calls to. That
+> number*. QCall gives you back a *SIP URI* that Vobiz must forward inbound calls to. That
 > two-way handshake is the whole integration.
 
 ---
@@ -27,23 +27,23 @@ It has two halves:
 ```
                          ┌─────────────────────────────────────────────┐
                          │                  QCall                        │
-                         │  (LiveKit SIP trunks + AI agent backend)      │
+                         │  (SIP trunks + AI agent backend)      │
                          └─────────────────────────────────────────────┘
    OUTBOUND  ─────────────────────────────►
-   AI agent dials a lead:                       LiveKit Outbound Trunk
+   AI agent dials a lead:                       Outbound Trunk
    QCall → Vobiz SIP domain (termination) ────► sends INVITE to
    authenticated with username/password         {trunk}.sip.vobiz.ai ──► PSTN ──► Lead's phone
 
    INBOUND   ◄─────────────────────────────
    Caller dials your Vobiz DID number ──► Vobiz ──► routes (origination URI) to
-   your QCall LiveKit SIP URI  ────────────────► LiveKit Inbound Trunk (matches the number)
+   your QCall SIP URI  ────────────────► Inbound Trunk (matches the number)
                                                  ──► Dispatch Rule ──► AI agent answers
 ```
 
 - **Outbound = QCall → Vobiz.** From QCall's point of view, Vobiz is where the call *terminates*
   into the phone network. That is why QCall calls it the **SIP Termination URI**.
 - **Inbound = Vobiz → QCall.** Vobiz must be told to *originate* the incoming call toward QCall's
-  LiveKit SIP address.
+  SIP address.
 
 ---
 
@@ -64,7 +64,7 @@ Then, after saving in QCall, you receive **one** value to bring *back* to Vobiz:
 
 | What QCall gives you           | Example value                       | Where it goes in Vobiz            |
 | ------------------------------ | ----------------------------------- | --------------------------------- |
-| Your **LiveKit SIP URI**       | `myproj-x1y2.sip.livekit.cloud`     | Inbound trunk **destination / origination URI** |
+| Your **SIP URI**       | `myproj-x1y2.sip.cloud`     | Inbound trunk **destination / origination URI** |
 
 ---
 
@@ -77,6 +77,10 @@ Then, after saving in QCall, you receive **one** value to bring *back* to Vobiz:
    authenticate any Vobiz API calls. (You don't paste these into QCall; they're only for managing
    Vobiz itself.)
 
+<Frame>
+    <img src="/images/vobiz/01-console-dashboard.png" alt="Vobiz console dashboard after sign-in" style={{ borderRadius: '0.5rem' }} />
+</Frame>
+
 ## Step 2 — Buy a phone number (DID)
 
 1. In the Vobiz console, go to the **DID / Phone Numbers** section.
@@ -84,6 +88,10 @@ Then, after saving in QCall, you receive **one** value to bring *back* to Vobiz:
 3. Purchase it. This number is your caller ID for outbound and your ring-in number for inbound.
 4. Record it in **E.164 format with the `+` and country code** — e.g. `+919876543210`.
    → This becomes the **Phone Number** field in QCall.
+
+<Frame>
+    <img src="/images/vobiz/02-buy-number.png" alt="Vobiz console: buy a Voice-capable DID" style={{ borderRadius: '0.5rem' }} />
+</Frame>
 
 ## Step 3 — Create a SIP trunk
 
@@ -96,6 +104,10 @@ Then, after saving in QCall, you receive **one** value to bring *back* to Vobiz:
 
 > Default trunk settings (transport `udp`, CPS limit, status `active`) are fine to start. You can
 > tune concurrency/CPS later.
+
+<Frame>
+    <img src="/images/vobiz/03-create-trunk.png" alt="Vobiz console: create SIP trunk and the generated SIP domain" style={{ borderRadius: '0.5rem' }} />
+</Frame>
 
 ## Step 4 — Create SIP credentials (username + password)
 
@@ -114,7 +126,7 @@ Then, after saving in QCall, you receive **one** value to bring *back* to Vobiz:
 
 1. Go to your DID number's settings and **associate it with the trunk** you created in Step 3.
 2. Leave the inbound destination for now — you'll point it at QCall in **Part C**, after QCall
-   gives you the LiveKit SIP URI.
+   gives you the SIP URI.
 
 ✅ **At this point you should have all four values** for the cheat-sheet:
 SIP domain, username, password, and DID number.
@@ -128,6 +140,7 @@ This is what a customer actually clicks in the QCall app.
 1. Log in to the **QCall dashboard**.
 2. Go to **Settings → Dialers** (the "Dialers" / "Phone Numbers" area).
 3. Click **➕ Add Dialer** and choose **SIP** as the dialer type.
+
 4. Fill in the form using your cheat-sheet:
 
    | Field                | What to enter                                              |
@@ -142,17 +155,17 @@ This is what a customer actually clicks in the QCall app.
 
 **What QCall does behind the scenes** (no action needed from you):
 
-- Creates a **LiveKit outbound trunk** → sends outbound calls to your Vobiz SIP domain,
+- Creates a **outbound trunk** → sends outbound calls to your Vobiz SIP domain,
   authenticated with your username/password, using your DID as caller ID.
-- Creates a **LiveKit inbound trunk** → matched to your DID number.
+- Creates a **inbound trunk** → matched to your DID number.
 - Creates a **dispatch rule** → routes incoming calls on that number to your AI agent.
 
 **What QCall gives you back:** on success, the dialer now exists and QCall exposes your
-**LiveKit SIP URI** (shown in the dialer's SIP config / setup instructions, format
+**SIP URI** (shown in the dialer's SIP config / setup instructions, format
 `yourproject.sip.livekit.cloud`). **Copy it — you need it for Part C.**
 
 > If you don't see the SIP URI in the UI, it's a fixed value for your QCall workspace — ask QCall
-> support and they'll provide your LiveKit SIP domain.
+> support and they'll provide your SIP domain.
 
 ---
 
@@ -161,11 +174,15 @@ This is what a customer actually clicks in the QCall app.
 Inbound calls only reach your AI agent once Vobiz knows where to forward them.
 
 1. Return to the **Vobiz console** → your trunk (or DID) → inbound routing settings.
-2. Set the inbound **destination / origination URI** to your QCall **LiveKit SIP URI** from Part B.
+2. Set the inbound **destination / origination URI** to your QCall **SIP URI** from Part B.
    - Enter it **without** the `sip:` prefix, e.g. `myproj-x1y2.sip.livekit.cloud`.
    - If Vobiz asks for a full URI format, use `sip:myproj-x1y2.sip.livekit.cloud:5060`.
 3. Make sure the DID from Step 2 is the number bound to this inbound route.
 4. Save.
+
+<Frame>
+    <img src="/images/vobiz/06-inbound-origination.png" alt="Vobiz console: inbound destination / origination URI set to the QCall SIP URI" style={{ borderRadius: '0.5rem' }} />
+</Frame>
 
 Now the loop is closed:
 
@@ -195,7 +212,7 @@ Now the loop is closed:
 | `Failed to create SIP configuration` on save        | One of the SIP fields is wrong/empty. Re-check SIP domain, username, password. All are required.       |
 | Outbound call fails / 401 / 403 at carrier          | Wrong username/password, or the credential isn't attached to the trunk whose SIP domain you entered.   |
 | Outbound rejected (number/format)                   | DID must be E.164 with `+` in QCall. Confirm the DID is enabled for outbound on Vobiz.                  |
-| Inbound call never reaches the agent                | Part C not done, or wrong LiveKit SIP URI. Verify Vobiz inbound destination = your `*.sip.livekit.cloud` URI (no `sip:` prefix). |
+| Inbound call never reaches the agent                | Part C not done, or wrong SIP URI. Verify Vobiz inbound destination = your `*.sip.livekit.cloud` URI (no `sip:` prefix). |
 | "This phone number is already being used"           | The DID is already registered to another QCall dialer/workspace. Delete the old dialer or use a new DID. |
 | Audio one-way or choppy                             | Transport/codec mismatch. Ensure the Vobiz trunk allows standard telephony codecs (μ-law/PCMU, 8 kHz). |
 | Password stopped working                            | Vobiz passwords are write-once. If rotated/lost, create a new Vobiz credential and update the QCall dialer. |
@@ -207,5 +224,5 @@ Now the loop is closed:
 - [Vobiz Quick Start](https://docs.vobiz.ai/quick-start)
 - [Vobiz — Create a Trunk](https://docs.vobiz.ai/trunks/create-trunk)
 - [Vobiz — Trunk Credentials](https://docs.vobiz.ai/trunks/credentials/credential-object)
-- [Vobiz — LiveKit Integration](https://docs.vobiz.ai/integrations/livekit)
+- [Vobiz — SIP Integration](https://docs.vobiz.ai/integrations/livekit)
 - [Vobiz — Origination URIs](https://docs.vobiz.ai/trunks/origination-uri/origination-uri-object)

@@ -67,13 +67,13 @@
                 "group": "Dialers",
                 "pages": [
                   "general/dialer/introduction",
-                  "general/dialer/integrateDialer",
-                  "general/dialer/vobizSipIntegration"
+                  "general/dialer/integrateDialer"
                 ]
               },
               {
                 "group": "Connect via SIP trunking",
                 "pages": [
+                  "general/dialer/vobizSipIntegration",
                   "general/sip/twilio",
                   "general/sip/telnyx",
                   "general/sip/vonage"
