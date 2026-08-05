@@ -74,6 +74,7 @@
                 "group": "Connect via SIP trunking",
                 "pages": [
                   "general/dialer/vobizSipIntegration",
+                  "general/dialer/plivoSipIntegration",
                   "general/sip/twilio",
                   "general/sip/telnyx",
                   "general/sip/vonage"
