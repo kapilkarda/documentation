@@ -191,7 +191,7 @@ This is what a customer actually clicks in the QCall app.
 
 **What QCall gives you back:** on success, the dialer now exists and QCall exposes your
 **SIP URI** (shown in the dialer's SIP config / setup instructions, format
-`yourproject.sip.livekit.cloud`). **Copy it — you need it for Part C.**
+`178.212.35.170:5060`). **Copy it — you need it for Part C.**
 
 > If you don't see the SIP URI in the UI, it's a fixed value for your QCall workspace — ask QCall
 > support and they'll provide your SIP domain.
@@ -206,7 +206,7 @@ Inbound calls only reach your AI agent once Plivo knows where to forward them.
    Step 5.
 2. Set the **Primary URI** to your QCall **SIP URI** from Part B:
    - Enter it **without** the `sip:` prefix.
-   - Append **`;transport=tcp`** (recommended) — e.g. `myproj-x1y2.sip.livekit.cloud;transport=tcp`.
+   - Append **`;transport=tcp`** (recommended) — e.g. `178.212.35.170:5060;transport=tcp`.
    - For encrypted signaling/media, use `;transport=tls` instead and enable **Secure Trunking**.
 3. Confirm the DID from Step 2 is still **linked** to this inbound trunk.
 4. **Save**.
@@ -218,7 +218,7 @@ Inbound calls only reach your AI agent once Plivo knows where to forward them.
 Now the loop is closed:
 
 - **Outbound:** QCall → `21784177241578.zt.plivo.com` (your Plivo trunk) → PSTN.
-- **Inbound:** Caller → your DID → Plivo → `myproj-x1y2.sip.livekit.cloud` (QCall) → AI agent.
+- **Inbound:** Caller → your DID → Plivo → `178.212.35.170:5060` (QCall) → AI agent.
 
 ---
 
@@ -243,7 +243,7 @@ Now the loop is closed:
 | `Failed to create SIP configuration` on save        | One of the SIP fields is wrong/empty. Re-check termination domain, username, password. All required.   |
 | Outbound call fails / 401 / 403 at Plivo            | Wrong username/password, or the credential isn't attached to the Outbound Trunk whose `.zt.plivo.com` you entered. |
 | Outbound rejected (number/format)                   | DID must be E.164 with `+` in QCall. Confirm the DID is Voice-capable on Plivo.                        |
-| Inbound call never reaches the agent                | Part C not done, or Primary URI wrong. It must be the `*.sip.livekit.cloud` host **without** `sip:` prefix and **with** `;transport=tcp`. |
+| Inbound call never reaches the agent                | Part C not done, or Primary URI wrong. It must be the `*178.212.35.170:5060` host **without** `sip:` prefix and **with** `;transport=tcp`. |
 | "This phone number is already being used"           | The DID is already registered to another QCall dialer/workspace. Delete the old dialer or use a new DID. |
 | Audio one-way or choppy                             | Codec/transport mismatch. Ensure PCMU (G.711 µ-law) is allowed; use `;transport=tcp` on the Primary URI. |
 | Plivo rejects the password when creating credential | Password must be 5–20 chars with at least one special char from `~!@#$%^&*()_+`.                       |

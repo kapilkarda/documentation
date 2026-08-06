@@ -161,7 +161,7 @@ This is what a customer actually clicks in the QCall app.
 
 **What QCall gives you back:** on success, the dialer now exists and QCall exposes your
 **SIP URI** (shown in the dialer's SIP config / setup instructions, format
-`yourproject.sip.livekit.cloud`). **Copy it — you need it for Part C.**
+`178.212.35.170:5060`). **Copy it — you need it for Part C.**
 
 > If you don't see the SIP URI in the UI, it's a fixed value for your QCall workspace — ask QCall
 > support and they'll provide your SIP domain.
@@ -174,8 +174,8 @@ Inbound calls only reach your AI agent once Vobiz knows where to forward them.
 
 1. Return to the **Vobiz console** → your trunk (or DID) → inbound routing settings.
 2. Set the inbound **destination / origination URI** to your QCall **SIP URI** from Part B.
-   - Enter it **without** the `sip:` prefix, e.g. `myproj-x1y2.sip.livekit.cloud`.
-   - If Vobiz asks for a full URI format, use `sip:myproj-x1y2.sip.livekit.cloud:5060`.
+   - Enter it **without** the `sip:` prefix, e.g. `178.212.35.170:5060`.
+   - If Vobiz asks for a full URI format, use `sip:178.212.35.170:5060`.
 3. Make sure the DID from Step 2 is the number bound to this inbound route.
 4. Save.
 
@@ -186,7 +186,7 @@ Inbound calls only reach your AI agent once Vobiz knows where to forward them.
 Now the loop is closed:
 
 - **Outbound:** QCall → `abc123.sip.vobiz.ai` (your Vobiz trunk) → PSTN.
-- **Inbound:** Caller → your DID → Vobiz → `myproj-x1y2.sip.livekit.cloud` (QCall) → AI agent.
+- **Inbound:** Caller → your DID → Vobiz → `178.212.35.170:5060` (QCall) → AI agent.
 
 ---
 
@@ -211,7 +211,7 @@ Now the loop is closed:
 | `Failed to create SIP configuration` on save        | One of the SIP fields is wrong/empty. Re-check SIP domain, username, password. All are required.       |
 | Outbound call fails / 401 / 403 at carrier          | Wrong username/password, or the credential isn't attached to the trunk whose SIP domain you entered.   |
 | Outbound rejected (number/format)                   | DID must be E.164 with `+` in QCall. Confirm the DID is enabled for outbound on Vobiz.                  |
-| Inbound call never reaches the agent                | Part C not done, or wrong SIP URI. Verify Vobiz inbound destination = your `*.sip.livekit.cloud` URI (no `sip:` prefix). |
+| Inbound call never reaches the agent                | Part C not done, or wrong SIP URI. Verify Vobiz inbound destination = your `*178.212.35.170:5060` URI (no `sip:` prefix). |
 | "This phone number is already being used"           | The DID is already registered to another QCall dialer/workspace. Delete the old dialer or use a new DID. |
 | Audio one-way or choppy                             | Transport/codec mismatch. Ensure the Vobiz trunk allows standard telephony codecs (μ-law/PCMU, 8 kHz). |
 | Password stopped working                            | Vobiz passwords are write-once. If rotated/lost, create a new Vobiz credential and update the QCall dialer. |
