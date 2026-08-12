@@ -993,7 +993,7 @@
         "required": [
           "campaigns_name",
           "assistant_id",
-          "contacts_id",
+          "segment_id",
           "dialer_id"
         ],
         "type": "object",
@@ -1006,8 +1006,8 @@
             "description": "The id of the assistant",
             "type": "string"
           },
-          "contacts_id": {
-            "description": "The id of the contact",
+          "segment_id": {
+            "description": "The id of the tag",
             "type": "string"
           },
           "dialer_id": {
