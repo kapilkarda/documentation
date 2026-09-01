@@ -1,0 +1,8 @@
+---
+title: "List Knowledge Base Entries"
+openapi: "GET /knowledgeBase/chunks?id={id}"
+---
+
+Returns the embedded entries of a knowledge base, paginated (`page` and `limit`; the application uses 20 per page).
+
+For FAQ knowledge bases the entries are question/answer pairs; for document and website knowledge bases they are text chunks.

@@ -642,7 +642,9 @@
                     "description": "The file to upload."
                   }
                 },
-                "required": ["file"]
+                "required": [
+                  "file"
+                ]
               }
             }
           },
@@ -887,6 +889,612 @@
           }
         }
       }
+    },
+    "/knowledgeBase/list": {
+      "get": {
+        "description": "Returns all knowledge bases that the user has access to. Each item's `data` field is a JSON-encoded string: an array of question/answer objects for FAQ knowledge bases, or an object with `type: \"document_embedding\"` (containing `source_urls`, `total_chunks`, `source_file` or `source_count`) for document and website knowledge bases. `status` is `building` while embeddings are generated in the background, then `ready` or `failed`.",
+        "responses": {
+          "200": {
+            "description": "Knowledge base list response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KnowledgeBase"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/create": {
+      "post": {
+        "description": "Creates a new knowledge base from FAQs (the **FAQ Mode** tab in the application). Send a title, a language code and a list of question/answer pairs — added manually or parsed from a CSV with `Questions` and `Answers` columns. Embeddings are built in the background; poll `GET /knowledgeBase/build-status` to track progress. For the **Document Upload** flow use `POST /knowledgeBase/upload-embed`, and for the **Website Scrape** flow use `POST /knowledgeBase/embed-urls`.",
+        "requestBody": {
+          "description": "Knowledge base to create (FAQ Mode)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewKnowledgeBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Knowledge base created; embedding is building in the background",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/upload-embed": {
+      "post": {
+        "description": "Uploads a document and creates a knowledge base from it (the **Document Upload** tab in the application). The document is chunked and embedded directly — no FAQ conversion. Accepted formats are PDF, DOC, DOCX, ODT and MD, with a maximum file size of 30MB. The title is optional and defaults to the file name. Embeddings are built in the background; poll `GET /knowledgeBase/build-status` to track progress.",
+        "requestBody": {
+          "description": "Multipart form with the document file, an optional title and a language code",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The document file (PDF, DOC, DOCX, ODT or MD, max 30MB)"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "Optional title, defaults to the file name"
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "Language code (e.g. `en`)"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Document uploaded; embedding is building in the background",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/embed-urls": {
+      "post": {
+        "description": "Creates a knowledge base by scraping website pages (the **Website Scrape** tab in the application). Each URL is scraped, chunked and embedded directly. URLs can be added manually or discovered from a sitemap with `POST /knowledgeBase/list-sitemap`. The title is optional and defaults to `Website KB`. Embeddings are built in the background; poll `GET /knowledgeBase/build-status` to track progress.",
+        "requestBody": {
+          "description": "Website URLs to scrape and embed (Website Scrape)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmbedUrlsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "URLs scraped; embedding is building in the background",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/list-sitemap": {
+      "post": {
+        "description": "Discovers page URLs from a website's sitemap (used by the **Website Scrape** tab before calling `POST /knowledgeBase/embed-urls`). Send one or more site URLs; the response returns the sitemap URLs found, which the user selects before embedding.",
+        "requestBody": {
+          "description": "Site URLs to read sitemaps from",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListSitemapRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Sitemap discovery response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SitemapResult"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/update?id={id}": {
+      "put": {
+        "description": "Updates a FAQ knowledge base's title, language and question/answer pairs. The whole knowledge base is re-embedded. To edit a single entry of a document or website knowledge base, use `PUT /knowledgeBase/chunks/update?id={id}` instead.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The `hash_id` of the knowledge base to update"
+          }
+        ],
+        "requestBody": {
+          "description": "Knowledge base fields to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewKnowledgeBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Knowledge base updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/delete?id={id}": {
+      "delete": {
+        "description": "Deletes a knowledge base by its `hash_id`, together with its embeddings.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The `hash_id` of the knowledge base to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Knowledge base deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/build-status?id={id}": {
+      "get": {
+        "description": "Returns the embedding build status and progress of a knowledge base. Poll this endpoint (the application polls every 5 seconds) while a knowledge base is in the `building` state until `build_status` is `ready` or `failed`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The `hash_id` of the knowledge base"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Build status response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/BuildStatus"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/chunks?id={id}": {
+      "get": {
+        "description": "Returns the embedded entries of a knowledge base, paginated. For FAQ knowledge bases the entries are question/answer pairs; for document and website knowledge bases they are text chunks. The application requests 20 entries per page.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The `hash_id` of the knowledge base"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number (1-based)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "description": "Number of entries per page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chunks response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ChunksPage"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/chunks/update?id={id}": {
+      "put": {
+        "description": "Updates a single entry (question/answer pair or text chunk) of a knowledge base. Only that entry is re-embedded, so this is cheaper than re-embedding the whole knowledge base.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The `hash_id` of the knowledge base"
+          }
+        ],
+        "requestBody": {
+          "description": "Entry to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChunkRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Entry updated and re-embedded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledgeBase/chunks/delete?id={id}": {
+      "delete": {
+        "description": "Deletes a single entry (question/answer pair or text chunk) from a knowledge base without re-embedding the whole knowledge base.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The `hash_id` of the knowledge base"
+          }
+        ],
+        "requestBody": {
+          "description": "Entry to delete",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteChunkRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Entry deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the request succeeded"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1063,7 +1671,6 @@
           "utterance_length",
           "meeting_note_prompt",
           "call_outcome_prompt"
-
         ],
         "type": "object",
         "properties": {
@@ -1114,12 +1721,17 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "enum": ["scheduleMeeting", "sendMessage"],
+                  "enum": [
+                    "scheduleMeeting",
+                    "sendMessage"
+                  ],
                   "description": "Type of action: scheduleMeeting or sendMessage"
                 },
                 "meetingType": {
                   "type": "string",
-                  "enum": ["openBooking"],
+                  "enum": [
+                    "openBooking"
+                  ],
                   "description": "Type of meeting"
                 },
                 "timezone": {
@@ -1162,41 +1774,94 @@
                   "type": "object",
                   "description": "SMS configuration for sendMessage action",
                   "properties": {
-                    "is_sms": { "type": "boolean", "description": "Enable SMS messaging" },
-                    "description": { "type": "string", "description": "Condition text describing when to send the SMS" },
-                    "content": { "type": "string", "description": "SMS message content" },
-                    "end_call_sms": { "type": "boolean", "description": "Send SMS after the call ends" },
-                    "end_call_sms_not_answered": { "type": "boolean", "description": "Send SMS if call is not answered" }
+                    "is_sms": {
+                      "type": "boolean",
+                      "description": "Enable SMS messaging"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Condition text describing when to send the SMS"
+                    },
+                    "content": {
+                      "type": "string",
+                      "description": "SMS message content"
+                    },
+                    "end_call_sms": {
+                      "type": "boolean",
+                      "description": "Send SMS after the call ends"
+                    },
+                    "end_call_sms_not_answered": {
+                      "type": "boolean",
+                      "description": "Send SMS if call is not answered"
+                    }
                   }
                 },
                 "whatsapp": {
                   "type": "object",
                   "description": "WhatsApp (Meta) configuration for sendMessage action (legacy, replaced by Zeplo)",
                   "properties": {
-                    "is_whatsapp": { "type": "boolean", "description": "Enable WhatsApp messaging" },
-                    "description": { "type": "string", "description": "Condition text describing when to send the message" },
-                    "content": { "type": "object", "description": "WhatsApp template object" },
-                    "end_call_sms": { "type": "boolean", "description": "Send after call ends" },
-                    "end_call_sms_not_answered": { "type": "boolean", "description": "Send if call not answered" }
+                    "is_whatsapp": {
+                      "type": "boolean",
+                      "description": "Enable WhatsApp messaging"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Condition text describing when to send the message"
+                    },
+                    "content": {
+                      "type": "object",
+                      "description": "WhatsApp template object"
+                    },
+                    "end_call_sms": {
+                      "type": "boolean",
+                      "description": "Send after call ends"
+                    },
+                    "end_call_sms_not_answered": {
+                      "type": "boolean",
+                      "description": "Send if call not answered"
+                    }
                   }
                 },
                 "zeplo": {
                   "type": "object",
                   "description": "Zeplo (WhatsApp) configuration for sendMessage action",
                   "properties": {
-                    "is_zeplo": { "type": "boolean", "description": "Enable Zeplo WhatsApp messaging" },
-                    "description": { "type": "string", "description": "Condition text describing when to send the WhatsApp message" },
+                    "is_zeplo": {
+                      "type": "boolean",
+                      "description": "Enable Zeplo WhatsApp messaging"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Condition text describing when to send the WhatsApp message"
+                    },
                     "content": {
                       "type": "object",
                       "description": "Zeplo template content and parameter configuration",
                       "properties": {
-                        "templateName": { "type": "string", "description": "Name of the approved WhatsApp template in Zeplo" },
-                        "language": { "type": "string", "description": "Template language code (e.g. en_US)", "default": "en_US" },
-                        "category": { "type": "string", "description": "Template category: MARKETING, UTILITY, or AUTHENTICATION", "enum": ["MARKETING", "UTILITY", "AUTHENTICATION"] },
+                        "templateName": {
+                          "type": "string",
+                          "description": "Name of the approved WhatsApp template in Zeplo"
+                        },
+                        "language": {
+                          "type": "string",
+                          "description": "Template language code (e.g. en_US)",
+                          "default": "en_US"
+                        },
+                        "category": {
+                          "type": "string",
+                          "description": "Template category: MARKETING, UTILITY, or AUTHENTICATION",
+                          "enum": [
+                            "MARKETING",
+                            "UTILITY",
+                            "AUTHENTICATION"
+                          ]
+                        },
                         "parameter_hints": {
                           "type": "array",
                           "description": "Array of hint strings aligned 1-to-1 with parameter_slots. Tells the AI what value to extract for each placeholder.",
-                          "items": { "type": "string" }
+                          "items": {
+                            "type": "string"
+                          }
                         },
                         "parameter_slots": {
                           "type": "array",
@@ -1204,10 +1869,27 @@
                           "items": {
                             "type": "object",
                             "properties": {
-                              "section": { "type": "string", "description": "Template section: header, body, or button", "enum": ["header", "body", "button"] },
-                              "index": { "type": "integer", "description": "For header/body: the placeholder number (1-based). For button: button position (0-based)" },
-                              "sub_index": { "type": "integer", "description": "For button only: the placeholder number inside the button URL (1-based)" },
-                              "label": { "type": "string", "description": "Human-readable label (e.g. 'Body {{1}}' or 'Button 0 (Track Order) {{1}}')" }
+                              "section": {
+                                "type": "string",
+                                "description": "Template section: header, body, or button",
+                                "enum": [
+                                  "header",
+                                  "body",
+                                  "button"
+                                ]
+                              },
+                              "index": {
+                                "type": "integer",
+                                "description": "For header/body: the placeholder number (1-based). For button: button position (0-based)"
+                              },
+                              "sub_index": {
+                                "type": "integer",
+                                "description": "For button only: the placeholder number inside the button URL (1-based)"
+                              },
+                              "label": {
+                                "type": "string",
+                                "description": "Human-readable label (e.g. 'Body {{1}}' or 'Button 0 (Track Order) {{1}}')"
+                              }
                             }
                           }
                         },
@@ -1218,12 +1900,20 @@
                         }
                       }
                     },
-                    "end_call_sms": { "type": "boolean", "description": "Send Zeplo message after the call ends" },
-                    "end_call_sms_not_answered": { "type": "boolean", "description": "Send Zeplo message if call is not answered" }
+                    "end_call_sms": {
+                      "type": "boolean",
+                      "description": "Send Zeplo message after the call ends"
+                    },
+                    "end_call_sms_not_answered": {
+                      "type": "boolean",
+                      "description": "Send Zeplo message if call is not answered"
+                    }
                   }
                 }
               },
-              "required": ["type"]
+              "required": [
+                "type"
+              ]
             }
           },
           "goal": {
@@ -1273,7 +1963,9 @@
           "ai_model_id": {
             "description": "Need to pass default 1",
             "type": "string",
-            "enum": ["1"]
+            "enum": [
+              "1"
+            ]
           },
           "sentiment": {
             "type": "object",
@@ -1300,27 +1992,54 @@
           "is_back_sound": {
             "description": "Background sound enable/disable",
             "type": "boolean",
-            "enum": [true, false]
+            "enum": [
+              true,
+              false
+            ]
           },
           "voice_speed": {
             "description": "Voice speed sound enable/disable",
             "type": "number",
-            "enum": [1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2]
+            "enum": [
+              1,
+              1.1,
+              1.2,
+              1.3,
+              1.4,
+              1.5,
+              1.6,
+              1.7,
+              1.8,
+              1.9,
+              2
+            ]
           },
           "is_filler": {
             "description": "Filler enable/disable",
             "type": "boolean",
-            "enum": [true, false]
+            "enum": [
+              true,
+              false
+            ]
           },
-          "fillers" : {
+          "fillers": {
             "description": "Fillers",
             "type": "array",
-            "enum": ["umm", "uhh"]
+            "enum": [
+              "umm",
+              "uhh"
+            ]
           },
           "assistant_image": {
             "description": "Assistant image url",
             "type": "string",
-            "enum": ["https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/1.jpeg", "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/1.jpeg", "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/3.jpeg", "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/4.jpeg", "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/5.jpeg"]
+            "enum": [
+              "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/1.jpeg",
+              "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/1.jpeg",
+              "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/3.jpeg",
+              "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/4.jpeg",
+              "https://precallai.s3.ap-south-1.amazonaws.com/assistant_profile/5.jpeg"
+            ]
           },
           "ai_modal": {
             "description": "AI modal will get where we choose Accent",
@@ -1329,37 +2048,90 @@
           "is_sensitivity": {
             "description": "Sensitivity enable/disable",
             "type": "boolean",
-            "enum": [true, false]
+            "enum": [
+              true,
+              false
+            ]
           },
           "sensitivity": {
             "description": "Sensitivity",
             "type": "number",
-            "enum": [600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000]
+            "enum": [
+              600,
+              700,
+              800,
+              900,
+              1000,
+              1100,
+              1200,
+              1300,
+              1400,
+              1500,
+              1600,
+              1700,
+              1800,
+              1900,
+              2000
+            ]
           },
           "temperature": {
             "description": "Temperature",
             "type": "number",
-            "enum": [0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2]
+            "enum": [
+              0.7,
+              0.8,
+              0.9,
+              1,
+              1.1,
+              1.2,
+              1.3,
+              1.4,
+              1.5,
+              1.6,
+              1.7,
+              1.8,
+              1.9,
+              2
+            ]
           },
           "is_opt_out": {
             "description": "Opt out enable/disable",
             "type": "boolean",
-            "enum": [true, false]
+            "enum": [
+              true,
+              false
+            ]
           },
           "opt_out_script": {
             "description": "If ```is_opt_out``` is enable then add opt out prompts",
             "type": "string",
-            "enum": ["If a user explicitly expresses that they no longer wish to receive calls, such as by saying 'Don't call me again,' 'I'm not interested,' or any similar phrase indicating that they want to opt out of future communications, please trigger the 'optOut' function and inform the user that they will no longer be contacted for calls."]
+            "enum": [
+              "If a user explicitly expresses that they no longer wish to receive calls, such as by saying 'Don't call me again,' 'I'm not interested,' or any similar phrase indicating that they want to opt out of future communications, please trigger the 'optOut' function and inform the user that they will no longer be contacted for calls."
+            ]
           },
           "is_wait_start_speech": {
             "description": "For assistant typle is ```outbound``` then you can enable or disable",
             "type": "boolean",
-            "enum": [true, false]
+            "enum": [
+              true,
+              false
+            ]
           },
           "utterance_length": {
             "description": "Utterance length",
             "type": "number",
-            "enum": [1,2,3,4,5,6,7,8,9,10]
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ]
           },
           "meeting_note_prompt": {
             "description": "Meeting note prompt",
@@ -1376,7 +2148,10 @@
           "gender": {
             "description": "Voice gender: male or female",
             "type": "string",
-            "enum": ["male", "female"]
+            "enum": [
+              "male",
+              "female"
+            ]
           },
           "is_start_speech_update": {
             "description": "Whether the start speech has been updated from default",
@@ -1410,10 +2185,22 @@
                 "type": "object",
                 "description": "Voice metadata labels",
                 "properties": {
-                  "language": { "type": "string", "description": "Language code (e.g. hi, en)" },
-                  "language_name": { "type": "string", "description": "Language name (e.g. Hindi, English)" },
-                  "gender": { "type": "string", "description": "Voice gender" },
-                  "accent": { "type": "string", "description": "Voice accent (e.g. Indian, US)" }
+                  "language": {
+                    "type": "string",
+                    "description": "Language code (e.g. hi, en)"
+                  },
+                  "language_name": {
+                    "type": "string",
+                    "description": "Language name (e.g. Hindi, English)"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "description": "Voice gender"
+                  },
+                  "accent": {
+                    "type": "string",
+                    "description": "Voice accent (e.g. Indian, US)"
+                  }
                 }
               },
               "preview_url": {
@@ -1431,7 +2218,9 @@
               "categories": {
                 "type": "array",
                 "description": "Usage categories for this voice",
-                "items": { "type": "string" }
+                "items": {
+                  "type": "string"
+                }
               },
               "source": {
                 "type": "string",
@@ -1526,7 +2315,10 @@
               "mode": {
                 "type": "string",
                 "description": "Widget display mode (e.g. floating, embedded)",
-                "enum": ["floating", "embedded"]
+                "enum": [
+                  "floating",
+                  "embedded"
+                ]
               },
               "api_key": {
                 "type": "string",
@@ -1586,7 +2378,11 @@
           "dialer_type": {
             "description": "Dialer type",
             "type": "string",
-            "enum": ["Twilio","Telnyx","sip"]
+            "enum": [
+              "Twilio",
+              "Telnyx",
+              "sip"
+            ]
           },
           "name": {
             "description": "The name of the dialer",
@@ -1639,7 +2435,10 @@
         ]
       },
       "Contact": {
-        "required": ["name", "description"],
+        "required": [
+          "name",
+          "description"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1706,7 +2505,11 @@
         }
       },
       "ContactAudienceNew": {
-        "required": ["first_name", "last_name", "phone"],
+        "required": [
+          "first_name",
+          "last_name",
+          "phone"
+        ],
         "type": "object",
         "properties": {
           "first_name": {
@@ -1743,7 +2546,6 @@
           }
         }
       },
-
       "Playground": {
         "required": [
           "first_name",
@@ -1796,7 +2598,10 @@
         ]
       },
       "Error": {
-        "required": ["error", "message"],
+        "required": [
+          "error",
+          "message"
+        ],
         "type": "object",
         "properties": {
           "error": {
@@ -1804,6 +2609,260 @@
             "format": "int32"
           },
           "message": {
+            "type": "string"
+          }
+        }
+      },
+      "QuestionAnswer": {
+        "required": [
+          "question",
+          "answer"
+        ],
+        "type": "object",
+        "properties": {
+          "question": {
+            "description": "The question",
+            "type": "string"
+          },
+          "answer": {
+            "description": "The answer to the question",
+            "type": "string"
+          }
+        }
+      },
+      "NewKnowledgeBase": {
+        "required": [
+          "title",
+          "language",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "The title of the knowledge base",
+            "type": "string"
+          },
+          "language": {
+            "description": "Language code (e.g. `en`)",
+            "type": "string"
+          },
+          "data": {
+            "description": "The question/answer pairs of the knowledge base",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestionAnswer"
+            }
+          }
+        }
+      },
+      "KnowledgeBase": {
+        "type": "object",
+        "properties": {
+          "hash_id": {
+            "description": "The unique id of the knowledge base, used as `id` in the other endpoints",
+            "type": "string"
+          },
+          "title": {
+            "description": "The title of the knowledge base",
+            "type": "string"
+          },
+          "language": {
+            "description": "Language code (e.g. `en`)",
+            "type": "string"
+          },
+          "status": {
+            "description": "Build status: `building`, `ready` or `failed`",
+            "type": "string"
+          },
+          "data": {
+            "description": "JSON-encoded string. An array of question/answer objects for FAQ knowledge bases, or an object with `type: \"document_embedding\"`, `source_urls`, `total_chunks`, `source_file` / `source_count` for document and website knowledge bases",
+            "type": "string"
+          },
+          "created_at": {
+            "description": "Creation date",
+            "type": "string"
+          }
+        }
+      },
+      "EmbedUrlsRequest": {
+        "required": [
+          "urls"
+        ],
+        "type": "object",
+        "properties": {
+          "urls": {
+            "description": "The website page URLs to scrape, chunk and embed",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "description": "Optional title, defaults to `Website KB`",
+            "type": "string"
+          },
+          "language": {
+            "description": "Optional language code (e.g. `en`)",
+            "type": "string"
+          }
+        }
+      },
+      "ListSitemapRequest": {
+        "required": [
+          "urls"
+        ],
+        "type": "object",
+        "properties": {
+          "urls": {
+            "description": "The site URLs to read sitemaps from (e.g. `https://example.com`)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pagelimit": {
+            "description": "Maximum number of page URLs returned per sitemap (the application uses 100)",
+            "type": "integer"
+          }
+        }
+      },
+      "SitemapResult": {
+        "type": "object",
+        "properties": {
+          "urls": {
+            "description": "The page URLs discovered in this sitemap",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "BuildStatus": {
+        "type": "object",
+        "properties": {
+          "build_status": {
+            "description": "`building`, `ready` or `failed`",
+            "type": "string"
+          },
+          "progress": {
+            "description": "Build progress details",
+            "type": "object",
+            "properties": {
+              "phase": {
+                "description": "Current phase, e.g. `queued`",
+                "type": "string"
+              },
+              "queue_position": {
+                "description": "Position in the build queue when phase is `queued`",
+                "type": "integer"
+              },
+              "percentage": {
+                "description": "Build progress percentage (0-100)",
+                "type": "integer"
+              },
+              "currentStatus": {
+                "description": "Human-readable description of the current step",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "KnowledgeBaseChunk": {
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "description": "The unique id of the entry",
+            "type": "string"
+          },
+          "node_type": {
+            "description": "The type of the entry, e.g. `Question` for FAQ entries",
+            "type": "string"
+          },
+          "content": {
+            "description": "The entry content (question text for FAQ entries, chunk text for documents)",
+            "type": "string"
+          },
+          "answer": {
+            "description": "The answer, for FAQ entries",
+            "type": "string"
+          }
+        }
+      },
+      "ChunksPage": {
+        "type": "object",
+        "properties": {
+          "chunks": {
+            "description": "The entries of the requested page (FAQ knowledge bases may return them as `faqs` with `Question` / `Answer` fields instead)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KnowledgeBaseChunk"
+            }
+          },
+          "pagination": {
+            "description": "Pagination details",
+            "type": "object",
+            "properties": {
+              "total": {
+                "description": "Total number of entries",
+                "type": "integer"
+              },
+              "total_pages": {
+                "description": "Total number of pages",
+                "type": "integer"
+              },
+              "page": {
+                "description": "Current page number",
+                "type": "integer"
+              },
+              "limit": {
+                "description": "Page size",
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "UpdateChunkRequest": {
+        "required": [
+          "node_id",
+          "node_type",
+          "content"
+        ],
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "description": "The id of the entry to update",
+            "type": "string"
+          },
+          "node_type": {
+            "description": "The type of the entry, e.g. `Question`",
+            "type": "string"
+          },
+          "content": {
+            "description": "The new content (question text for FAQ entries, chunk text for documents)",
+            "type": "string"
+          },
+          "answer": {
+            "description": "The new answer, for FAQ entries",
+            "type": "string"
+          }
+        }
+      },
+      "DeleteChunkRequest": {
+        "required": [
+          "node_id",
+          "node_type"
+        ],
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "description": "The id of the entry to delete",
+            "type": "string"
+          },
+          "node_type": {
+            "description": "The type of the entry, e.g. `Question`",
             "type": "string"
           }
         }

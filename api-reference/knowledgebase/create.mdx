@@ -1,0 +1,21 @@
+---
+title: "Create Knowledge Base (FAQ Mode)"
+openapi: "POST /knowledgeBase/create"
+description: "Creates a knowledge base from question/answer pairs — the FAQ Mode tab in the application."
+---
+
+Knowledge bases can be created in three ways, matching the tabs in the application:
+
+<Tabs>
+  <Tab title="FAQ Mode">
+    Add question/answer pairs manually or upload a CSV with `Questions` and `Answers` columns, then call <code>POST /knowledgeBase/create</code> (this endpoint).
+  </Tab>
+  <Tab title="Document Upload">
+    Upload a PDF, DOC, DOCX, ODT or MD file (max 30MB) via <code>POST /knowledgeBase/upload-embed</code>. The document is chunked and embedded directly — no FAQ conversion.
+  </Tab>
+  <Tab title="Website Scrape">
+    Provide page URLs (optionally discovered from a sitemap via <code>POST /knowledgeBase/list-sitemap</code>) and call <code>POST /knowledgeBase/embed-urls</code>.
+  </Tab>
+</Tabs>
+
+Embeddings are built in the background after creation. Poll `GET /knowledgeBase/build-status` until the build is `ready`.

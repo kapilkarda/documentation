@@ -1,0 +1,11 @@
+---
+title: "Embed URLs"
+openapi: "POST /knowledgeBase/embed-urls"
+description: "Creates a knowledge base by scraping website pages — the Website Scrape tab in the application."
+---
+
+Each URL in `urls` is scraped, chunked and embedded directly.
+
+- `title` is optional and defaults to `Website KB`.
+- To discover URLs from a sitemap first, call `POST /knowledgeBase/list-sitemap` and let the user select pages.
+- Embeddings are built in the background; poll `GET /knowledgeBase/build-status` until the build is `ready`.

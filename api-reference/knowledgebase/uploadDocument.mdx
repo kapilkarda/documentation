@@ -1,0 +1,11 @@
+---
+title: "Upload Document"
+openapi: "POST /knowledgeBase/upload-embed"
+description: "Uploads a document and creates a knowledge base from it — the Document Upload tab in the application."
+---
+
+Send the file as `multipart/form-data`. Supported formats are **PDF, DOC, DOCX, ODT and MD**, with a maximum size of **30MB**.
+
+- `title` is optional and defaults to the file name.
+- The document is chunked and embedded directly — no FAQ conversion.
+- Embeddings are built in the background; poll `GET /knowledgeBase/build-status` until the build is `ready`.

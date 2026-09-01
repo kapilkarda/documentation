@@ -1,0 +1,6 @@
+---
+title: "Get Build Status"
+openapi: "GET /knowledgeBase/build-status?id={id}"
+---
+
+Returns the embedding build status and progress of a knowledge base. While a knowledge base is in the `building` state, poll this endpoint (the application polls every 5 seconds) until `build_status` is `ready` or `failed`.

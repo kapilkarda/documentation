@@ -1,0 +1,9 @@
+---
+title: "List Sitemap URLs"
+openapi: "POST /knowledgeBase/list-sitemap"
+description: "Discovers page URLs from a website's sitemap — used before embedding URLs in the Website Scrape flow."
+---
+
+Send one or more site URLs (e.g. `https://example.com`). The response returns the page URLs discovered in each sitemap, which the user selects before calling `POST /knowledgeBase/embed-urls`.
+
+`pagelimit` caps the number of page URLs returned per sitemap — the application uses `100`.

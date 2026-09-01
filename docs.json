@@ -272,6 +272,22 @@
               "api-reference/campaigns/create",
               "api-reference/campaigns/audienceList"
             ]
+          },
+          {
+            "group": "Knowledge Base",
+            "pages": [
+              "api-reference/knowledgebase/list",
+              "api-reference/knowledgebase/create",
+              "api-reference/knowledgebase/uploadDocument",
+              "api-reference/knowledgebase/embedUrls",
+              "api-reference/knowledgebase/listSitemap",
+              "api-reference/knowledgebase/update",
+              "api-reference/knowledgebase/delete",
+              "api-reference/knowledgebase/buildStatus",
+              "api-reference/knowledgebase/chunks",
+              "api-reference/knowledgebase/updateChunk",
+              "api-reference/knowledgebase/deleteChunk"
+            ]
           }
         ]
       }
