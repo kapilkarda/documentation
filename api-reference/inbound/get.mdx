@@ -1,0 +1,8 @@
+---
+title: "List Inbound"
+openapi: "GET /inbound/list"
+---
+
+Returns all inbound dialer that the authenticated user has access to.
+
+Each inbound dialer links an existing assistant to a dialer phone number, so that incoming calls placed to that number are automatically answered by the AI assistant. The response includes the linked assistant name, the attached phone number, and the number of incoming calls handled.

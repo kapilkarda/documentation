@@ -1,0 +1,14 @@
+---
+title: "Create Inbound"
+openapi: "POST /inbound/create"
+---
+
+Creates a new inbound dialer.
+
+An inbound dialer binds an existing assistant (or IVR assistant) to a dialer phone number, so that incoming calls placed to that number are handled automatically by the selected assistant.
+
+Set `notification` to `true` to enable notifications for incoming calls handled by this inbound assistant.
+
+<Note title="Heads up">
+To actually receive incoming calls, configure your telephony provider (e.g. Twilio) to send call webhooks to `https://api.qcall.ai/inbound`. See [Twilio's TwiML request documentation](https://www.twilio.com/docs/voice/twiml#twilios-request-to-your-application) for more details.
+</Note>

@@ -426,6 +426,159 @@
         }
       }
     },
+    "/inbound/list": {
+      "get": {
+        "description": "Returns all inbound assistants that the authenticated user has access to. Each inbound assistant links an assistant to a dialer phone number so that incoming calls to that number are answered by the AI assistant.",
+        "summary": "List inbound assistants",
+        "responses": {
+          "200": {
+            "description": "Inbound assistant response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Inbound"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inbound/create": {
+      "post": {
+        "description": "Creates a new inbound assistant. An inbound assistant binds an existing assistant to a dialer phone number, so that incoming calls placed to that number are handled automatically by the selected assistant. **Note:** to receive incoming calls you must also configure your telephony provider (e.g. Twilio) to send call webhooks to `https://api.qcall.ai/inbound`.",
+        "summary": "Create an inbound assistant",
+        "requestBody": {
+          "description": "Inbound assistant to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewInbound"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Inbound assistant response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Inbound"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inbound/update?id={id}": {
+      "put": {
+        "description": "Updates an existing inbound assistant identified by the supplied ID. You can rename the inbound assistant or re-bind it to a different assistant and/or dialer phone number.",
+        "summary": "Update an inbound assistant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the inbound assistant to update"
+          }
+        ],
+        "requestBody": {
+          "description": "Inbound assistant fields to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInbound"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Inbound assistant response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Inbound"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inbound/delete?id={id}": {
+      "delete": {
+        "description": "Removes a single inbound assistant based on the ID supplied. Only the inbound binding is removed \u2014 the linked assistant and the dialer (with its phone number) are not deleted.",
+        "summary": "Delete an inbound assistant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the inbound assistant to remove"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Inbound assistant removed",
+            "content": {}
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/tag/list": {
       "get": {
         "description": "Returns all Tags from the system that the user has access to",
@@ -935,7 +1088,7 @@
     },
     "/knowledgeBase/create": {
       "post": {
-        "description": "Creates a new knowledge base from FAQs (the **FAQ Mode** tab in the application). Send a title, a language code and a list of question/answer pairs — added manually or parsed from a CSV with `Questions` and `Answers` columns. Embeddings are built in the background; poll `GET /knowledgeBase/build-status` to track progress. For the **Document Upload** flow use `POST /knowledgeBase/upload-embed`, and for the **Website Scrape** flow use `POST /knowledgeBase/embed-urls`.",
+        "description": "Creates a new knowledge base from FAQs (the **FAQ Mode** tab in the application). Send a title, a language code and a list of question/answer pairs \u2014 added manually or parsed from a CSV with `Questions` and `Answers` columns. Embeddings are built in the background; poll `GET /knowledgeBase/build-status` to track progress. For the **Document Upload** flow use `POST /knowledgeBase/upload-embed`, and for the **Website Scrape** flow use `POST /knowledgeBase/embed-urls`.",
         "requestBody": {
           "description": "Knowledge base to create (FAQ Mode)",
           "content": {
@@ -983,7 +1136,7 @@
     },
     "/knowledgeBase/upload-embed": {
       "post": {
-        "description": "Uploads a document and creates a knowledge base from it (the **Document Upload** tab in the application). The document is chunked and embedded directly — no FAQ conversion. Accepted formats are PDF, DOC, DOCX, ODT and MD, with a maximum file size of 30MB. The title is optional and defaults to the file name. Embeddings are built in the background; poll `GET /knowledgeBase/build-status` to track progress.",
+        "description": "Uploads a document and creates a knowledge base from it (the **Document Upload** tab in the application). The document is chunked and embedded directly \u2014 no FAQ conversion. Accepted formats are PDF, DOC, DOCX, ODT and MD, with a maximum file size of 30MB. The title is optional and defaults to the file name. Embeddings are built in the background; poll `GET /knowledgeBase/build-status` to track progress.",
         "requestBody": {
           "description": "Multipart form with the document file, an optional title and a language code",
           "content": {
@@ -1895,7 +2048,7 @@
                         },
                         "components": {
                           "type": "array",
-                          "description": "Always empty array [] — built at send time from parameter values",
+                          "description": "Always empty array [] \u2014 built at send time from parameter values",
                           "items": {}
                         }
                       }
@@ -2428,6 +2581,87 @@
         "allOf": [
           {
             "$ref": "#/components/schemas/Dialer"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "Inbound": {
+        "required": [
+          "id",
+          "name",
+          "assistant_id",
+          "dialer_id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique identifier of the inbound assistant",
+            "type": "string"
+          },
+          "name": {
+            "description": "The display name of the inbound assistant",
+            "type": "string"
+          },
+          "assistant_id": {
+            "description": "ID of the assistant that answers the inbound calls",
+            "type": "string"
+          },
+          "assistant_name": {
+            "description": "Name of the linked assistant",
+            "type": "string"
+          },
+          "dialer_id": {
+            "description": "ID of the dialer that provides the phone number",
+            "type": "string"
+          },
+          "phone_number": {
+            "description": "Phone number the inbound assistant is attached to",
+            "type": "string"
+          },
+          "incoming_count": {
+            "description": "Number of incoming calls handled by this inbound assistant",
+            "type": "integer",
+            "format": "int32"
+          },
+          "notification": {
+            "description": "Whether notifications are enabled for incoming calls handled by this inbound assistant",
+            "type": "boolean"
+          }
+        }
+      },
+      "NewInbound": {
+        "required": [
+          "name",
+          "assistant_id",
+          "dialer_id"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the inbound assistant",
+            "type": "string"
+          },
+          "assistant_id": {
+            "description": "ID of the assistant (or IVR assistant) that will handle the inbound calls",
+            "type": "string"
+          },
+          "dialer_id": {
+            "description": "ID of the dialer whose phone number receives the inbound calls",
+            "type": "string"
+          },
+          "notification": {
+            "description": "Whether to enable notifications for incoming calls handled by this inbound assistant",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "UpdateInbound": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NewInbound"
           },
           {
             "type": "object"

@@ -248,7 +248,11 @@
               "api-reference/dialers/get",
               "api-reference/dialers/create",
               "api-reference/dialers/update",
-              "api-reference/dialers/delete"
+              "api-reference/dialers/delete",
+              "api-reference/inbound/get",
+              "api-reference/inbound/create",
+              "api-reference/inbound/update",
+              "api-reference/inbound/delete"
             ]
           },
           {

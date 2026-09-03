@@ -1,0 +1,8 @@
+---
+title: "Delete Inbound"
+openapi: "DELETE /inbound/delete?id={id}"
+---
+
+Removes a single inbound dialer based on the supplied `id`.
+
+Only the inbound binding is removed — the linked assistant and the dialer (with its phone number) are not deleted. After removal, incoming calls to that number will no longer be answered by the assistant.

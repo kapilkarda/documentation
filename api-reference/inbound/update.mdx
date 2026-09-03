@@ -1,0 +1,8 @@
+---
+title: "Update Inbound"
+openapi: "PUT /inbound/update?id={id}"
+---
+
+Updates an existing inbound dialer identified by the supplied `id`.
+
+You can rename the inbound, re-bind it to a different assistant and/or dialer phone number, or toggle the `notification` flag (`true`/`false`) to enable or disable notifications for incoming calls. Provide the full request body with the fields you want to keep or change.
