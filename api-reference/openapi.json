@@ -394,27 +394,59 @@
         }
       }
     },
-    "/dialer/delete?id={id}": {
+    "/dialer/delete": {
       "delete": {
-        "description": "Deletes a single dialer based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of dialer to delete",
-            "required": true,
-            "schema": {
-              "type": "string"
+        "description": "Deletes a single dialer. For SIP dialers, the associated LiveKit resources (inbound trunk, outbound trunk, dispatch rule) are also torn down. The dialer cannot be deleted while it is assigned to an active campaign.",
+        "summary": "Delete a dialer",
+        "requestBody": {
+          "description": "Dialer to delete",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteDialer"
+              },
+              "example": {
+                "id": "87c30c44-8561-4db7-852a-6cc1b4e16f88",
+                "dialer_type": "sip",
+                "sip_inbound_trunk_id": "ST_qQdA87qTWr9z",
+                "sip_outbound_trunk_id": "ST_p8cyrfk6QMWf",
+                "sip_trunk_id": "SDR_eSSPvcvuUU45"
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "204": {
+          "200": {
             "description": "Dialer deleted",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "unexpected error",
+            "description": "unexpected error, dialer is assigned to an active campaign, or SIP resource deletion failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dialer not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -2586,6 +2618,39 @@
             "type": "object"
           }
         ]
+      },
+      "DeleteDialer": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The ID of the dialer to delete",
+            "type": "string"
+          },
+          "dialer_type": {
+            "description": "Dialer type. Only used as a fallback; the stored dialer type takes precedence.",
+            "type": "string",
+            "enum": [
+              "Twilio",
+              "Telnyx",
+              "sip"
+            ]
+          },
+          "sip_inbound_trunk_id": {
+            "description": "LiveKit inbound trunk ID. Accepted for compatibility; the stored value is used for deletion.",
+            "type": "string"
+          },
+          "sip_outbound_trunk_id": {
+            "description": "LiveKit outbound trunk ID. Accepted for compatibility; the stored value is used for deletion.",
+            "type": "string"
+          },
+          "sip_trunk_id": {
+            "description": "LiveKit dispatch rule ID. Accepted for compatibility; the stored value is used for deletion.",
+            "type": "string"
+          }
+        }
       },
       "Inbound": {
         "required": [
