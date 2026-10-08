@@ -3,11 +3,16 @@
   "theme": "mint",
   "name": "qcallai docs",
   "colors": {
-    "primary": "#7C53FC",
-    "light": "#7C53FC",
-    "dark": "#7C53FC"
+    "primary": "#B8451F",
+    "light": "#EB663A",
+    "dark": "#9A3818"
   },
-  "favicon": "/favicon.png",
+  "favicon": "/logo/qcall-icon.png",
+  "background": {
+    "color": {
+      "light": "#FCFAF7"
+    }
+  },
   "navigation": {
     "tabs": [
       {
@@ -75,6 +80,7 @@
                 "pages": [
                   "general/dialer/vobizSipIntegration",
                   "general/dialer/plivoSipIntegration",
+                  "general/dialer/sixtyDbSipIntegration",
                   "general/sip/twilio",
                   "general/sip/telnyx",
                   "general/sip/vonage"

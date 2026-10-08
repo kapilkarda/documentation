@@ -1,0 +1,220 @@
+---
+title: 60db SIP Integration
+description: "This page describes everything about 60db SIP Integration"
+---
+
+## 60db SIP Integration Guide — QCall SIP Dialer (Inbound + Outbound)
+
+This guide walks a customer through connecting a **60db Dialer SIP trunk** to QCall so their
+AI agent can place **outbound** calls and receive **inbound** calls on a real Indian phone number.
+
+It has three parts:
+
+- **Part A — 60db side:** complete KYC, set up trunks, rent a number, and collect the values QCall needs.
+- **Part B — QCall side:** add the SIP Dialer in the QCall dashboard.
+- **Part C — 60db side:** point inbound calls back to QCall.
+
+> **You need one thing from each side.** 60db gives you a *SIP domain + username + password + phone
+> number*. QCall gives you back a *SIP URI* that 60db must forward inbound calls to. That
+> two-way handshake is the whole integration.
+
+---
+
+## How it works (architecture)
+
+```
+                         ┌─────────────────────────────────────────────┐
+                         │                  QCall                        │
+                         │  (SIP trunks + AI agent backend)      │
+                         └─────────────────────────────────────────────┘
+   OUTBOUND  ─────────────────────────────►
+   AI agent dials a lead:                       Outbound Trunk
+   QCall → 60db SIP domain (termination) ─────► sends INVITE to
+   authenticated with username/password         your 60db SIP domain ──► PSTN ──► Lead's phone
+
+   INBOUND   ◄─────────────────────────────
+   Caller dials your 60db number ──► 60db ──► routes (inbound trunk) to
+   your QCall SIP URI  ────────────────► Inbound Trunk (matches the number)
+                                                 ──► Dispatch Rule ──► AI agent answers
+```
+
+- **Outbound = QCall → 60db.** From QCall's point of view, 60db is where the call *terminates*
+  into the phone network. That is why QCall calls it the **SIP Termination URI**.
+- **Inbound = 60db → QCall.** 60db's inbound trunk must forward incoming calls to QCall's SIP address.
+
+---
+
+## Before you start
+
+| Requirement           | Where (60db Dashboard)       | Why                                                            |
+| --------------------- | ---------------------------- | -------------------------------------------------------------- |
+| **KYC approved**      | **Dialer → KYC**             | Needed to buy numbers. PAN + Aadhaar/passport + address proof. |
+| **Trunk set up**      | **Dialer → Trunks**          | Needed for calls, recordings and caller ID.                    |
+| **Wallet balance**    | Billing / Wallet             | Number rental is charged at purchase.                          |
+
+> KYC can only be submitted in the dashboard, not through the API. Review states are
+> `DIALER_KYC_PENDING`, `DIALER_KYC_APPROVED` and `DIALER_KYC_REJECTED` (resubmit with correct documents).
+
+---
+
+## Credential cheat-sheet (60db → QCall field mapping)
+
+Fill this in as you go through Part A. You'll paste the right-hand column into the QCall dashboard
+in Part B.
+
+| What you get from 60db                 | Example value                     | QCall dashboard field    |
+| -------------------------------------- | --------------------------------- | ------------------------ |
+| Outbound trunk **SIP domain / host**   | `<your-60db-sip-domain>`          | **SIP Termination URI**  |
+| Trunk **SIP credential username**      | `qcall_prod`                      | **SIP Username**         |
+| Trunk **SIP credential password**      | `••••••••••••`                    | **SIP Password**         |
+| Rented **phone number**                | `+919876543210`                   | **Phone Number**         |
+| *(any label you like)*                 | `My 60db Line`                    | **Dialer Name**          |
+
+Then, after saving in QCall, you receive **one** value to bring *back* to 60db:
+
+| What QCall gives you   | Example value          | Where it goes in 60db                        |
+| ---------------------- | ---------------------- | -------------------------------------------- |
+| Your **SIP URI**       | `3.109.230.240:5060`   | Inbound trunk **destination / forward URI**  |
+
+---
+
+# Part A — 60db: get your SIP credentials & number
+
+## Step 1 — Create your 60db account
+
+1. Sign up / log in at **https://app.60db.ai**.
+2. Select the workspace you want to use. Numbers, trunks and billing are **per workspace**.
+3. Top up your wallet. Buying a number with a low balance fails with `402 RECHARGE_REQUIRED`.
+
+## Step 2 — Complete KYC (Gate K)
+
+1. Go to **Dialer → KYC**.
+2. Upload **PAN**, **Aadhaar or passport**, and **address proof**.
+3. Wait for the status to become **Approved**. You can't buy numbers until then.
+
+## Step 3 — Set up the SIP trunk (Gate T)
+
+1. Go to **Dialer → Trunks**.
+2. Set up the **outbound trunk** (for placing calls) and the **inbound trunk** (for receiving calls).
+3. **Download / copy your SIP credentials**: SIP domain (host), username and password.
+   - SIP domain → **SIP Termination URI** in QCall
+   - Username + password → **SIP Username** and **SIP Password** in QCall
+4. Keep the password safe. If you lose it, regenerate the credentials and update the QCall dialer.
+
+> Until a trunk exists, 60db call endpoints return `409 DIALER_NOT_PROVISIONED`.
+
+## Step 4 — Rent a phone number
+
+1. In **Dialer → Numbers**, search the shared pool and buy a number
+   (API: `GET /dialer/pool` → `POST /dialer/pool/allocate`).
+2. Write it down in **E.164 format with `+91`**, e.g. `+919876543210`.
+   → This becomes the **Phone Number** field in QCall.
+3. Set it as the **default caller ID** (API: `PUT /dialer/caller-id`) so outbound calls show this number.
+
+✅ **At this point you should have all four values** for the cheat-sheet:
+SIP domain, username, password, and phone number.
+
+---
+
+# Part B — QCall dashboard: add the SIP Dialer
+
+1. Log in to the **QCall dashboard**.
+2. Go to **Settings → Dialers** (the "Dialers" / "Phone Numbers" area).
+3. Click **➕ Add Dialer** and choose **SIP** as the dialer type.
+4. Fill in the form using your cheat-sheet:
+
+   | Field                   | What to enter                                           |
+   | ----------------------- | ------------------------------------------------------- |
+   | **Dialer Name**         | Any label, e.g. `My 60db Line`                          |
+   | **Phone Number**        | Your 60db number in E.164, e.g. `+919876543210`         |
+   | **SIP Termination URI** | Your 60db SIP domain from **Dialer → Trunks**           |
+   | **SIP Username**        | The 60db SIP username                                   |
+   | **SIP Password**        | The 60db SIP password                                   |
+
+5. Click **Create / Save**.
+
+**What QCall does behind the scenes** (no action needed from you):
+
+- Creates an **outbound trunk** → sends outbound calls to your 60db SIP domain,
+  authenticated with your username/password, using your 60db number as caller ID.
+- Creates an **inbound trunk** → matched to your 60db number.
+- Creates a **dispatch rule** → routes incoming calls on that number to your AI agent.
+
+**What QCall gives you back:** your **SIP URI** (shown in the dialer's SIP config / setup
+instructions, format `3.109.230.240:5060`). **Copy it — you need it for Part C.**
+
+> If you don't see the SIP URI in the UI, it's a fixed value for your QCall workspace — ask QCall
+> support and they'll provide it.
+
+---
+
+# Part C — 60db: finish the inbound loop-back
+
+Inbound calls only reach your AI agent once 60db knows where to forward them.
+
+1. Return to **60db Dashboard → Dialer → Trunks** → your **inbound trunk**.
+2. Set the inbound **destination / forward URI** to your QCall **SIP URI** from Part B.
+   - Enter it **without** the `sip:` prefix, e.g. `3.109.230.240:5060`.
+   - If 60db asks for a full URI, use `sip:3.109.230.240:5060`.
+3. Make sure the number from Step 4 is the one bound to this inbound trunk.
+4. Save.
+
+Now the loop is closed:
+
+- **Outbound:** QCall → your 60db SIP domain → PSTN.
+- **Inbound:** Caller → your 60db number → 60db → `3.109.230.240:5060` (QCall) → AI agent.
+
+---
+
+## Testing
+
+**Outbound test**
+1. In QCall, assign the new SIP dialer to a campaign or a Playground test call.
+2. Call your own mobile. It should ring with your 60db number as caller ID, and the AI agent
+   should speak when you answer.
+
+**Inbound test**
+1. Assign an inbound assistant to this dialer/number in QCall.
+2. From any phone, call your 60db number. It should connect to your AI agent.
+
+You can confirm both calls in 60db under **Dialer → Calls** (call history / recordings).
+
+---
+
+## Pricing (60db side)
+
+| Item                    | Cost                                                       |
+| ----------------------- | ---------------------------------------------------------- |
+| Number rental           | ₹600 ($6.00) / month, charged at purchase and each renewal |
+| Inbound calls           | ₹0.30/min ($0.003/min), billed per second                  |
+| Outbound calls          | ₹0.30/min ($0.003/min), billed per second                  |
+| Grace period            | 48 hours after renewal; unpaid numbers are then released   |
+
+QCall usage charges are billed separately by QCall.
+
+---
+
+## Troubleshooting
+
+| Symptom                                       | Likely cause & fix                                                                                        |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `Failed to create SIP configuration` on save  | One of the SIP fields is wrong/empty. Re-check SIP domain, username, password. All are required.          |
+| Outbound call fails / 401 / 403 at carrier    | Wrong username/password, or credentials belong to a different workspace/trunk.                            |
+| 60db `409 DIALER_NOT_PROVISIONED`             | Trunk not set up yet. Finish **Dialer → Trunks** (Step 3).                                                |
+| 60db `403 DIALER_KYC_*` when buying a number  | KYC not started, pending, or rejected. Complete **Dialer → KYC** (Step 2).                                |
+| 60db `402 RECHARGE_REQUIRED`                  | Wallet balance too low. Top up and retry.                                                                 |
+| 60db `403 CALLER_ID_NOT_OWNED`                | The phone number in QCall isn't rented by your 60db workspace. Use a number from **Dialer → Numbers**.    |
+| 60db `502 CARRIER_LINE_DOWN`                  | Carrier is temporarily unavailable. Retry later or check line status in 60db.                             |
+| Outbound rejected (number/format)             | Number must be E.164 with `+91` in QCall.                                                                 |
+| Inbound call never reaches the agent          | Part C not done, or wrong SIP URI. Verify the inbound trunk forwards to `3.109.230.240:5060`.             |
+| "This phone number is already being used"     | The number is already registered to another QCall dialer/workspace. Delete the old dialer or use another. |
+| Audio one-way or choppy                       | Codec mismatch. Ensure the trunk allows standard telephony codecs (μ-law/PCMU, 8 kHz).                    |
+
+---
+
+## Sources
+
+- [60db — Dialer](https://docs.60db.ai/features/dialer)
+- [60db — Buy Number](https://docs.60db.ai/api-reference/dialer/buy-number)
+- [60db — Set Caller ID](https://docs.60db.ai/api-reference/dialer/set-caller-id)
+- [60db — Line Status](https://docs.60db.ai/api-reference/dialer/line-status)
