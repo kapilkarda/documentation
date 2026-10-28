@@ -87,18 +87,135 @@
         }
       }
     },
-    "/campaign/audiences?id={id}": {
+    "/campaign/audiences": {
       "post": {
-        "description": "Returns all campaign's audiences from the system that the user has access to",
+        "description": "Returns the call history of a campaign: every contact in the campaign with its call status, sentiment, duration and cost. Supports pagination, filters, search and sorting.",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the campaign to get audiences"
+            "description": "The ID of the campaign",
+            "example": "006adf48-9da8-4672-bd3a-f5849f61b433"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "description": "Page index, starting at 0. Send `-1` (with `perpage=-1`) to return all records.",
+            "example": -1
+          },
+          {
+            "name": "perpage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "description": "Number of records per page. Send `-1` to return all records.",
+            "example": 2
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "completed",
+                "inProgress",
+                "pending",
+                "failed",
+                "error"
+              ]
+            },
+            "description": "Filter by call status. Leave empty for all statuses."
+          },
+          {
+            "name": "sentiment",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "positive",
+                "negative",
+                "neutral"
+              ]
+            },
+            "description": "Filter by call sentiment. Leave empty for all sentiments."
+          },
+          {
+            "name": "favourite",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "true",
+                "false"
+              ]
+            },
+            "description": "Filter favourite contacts: `true` for favourites, `false` for non-favourites. Leave empty for all."
+          },
+          {
+            "name": "optOut",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "",
+                "true",
+                "false"
+              ]
+            },
+            "description": "Filter by opt-out: `true` for contacts who opted out, `false` for subscribed contacts. Leave empty for all."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search text matched against contact name, email and phone number."
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to sort by, for example `phone`, `first_name`, `email`, `call_duration_in_sec`, `call_cost`, `called_at` or `created_at`.",
+            "example": "phone"
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction.",
+            "example": "desc"
           }
         ],
         "responses": {
@@ -125,7 +242,8 @@
               }
             }
           }
-        }
+        },
+        "summary": "Campaign History"
       }
     },
     "/user/listAssistant": {
